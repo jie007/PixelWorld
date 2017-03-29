@@ -31,10 +31,7 @@ function enemy_mgr.create(id)
 
 	local transform = monster.transform
 
-	local prefab_bar = resMgr:LoadAsset('UI/Widget/HealthBar')
-	local bar = GameObject.Instantiate(prefab_bar)
-	bar.transform:SetParent(battle.canvas)
-	bar.transform.localScale = Vector3.one
+	local bar = ObjectPool.Spawn('HealthBar', battle.canvas)
 	local follow = bar:GetComponent('Follow')
 	follow.target = transform
 	follow.offset = Vector3.New(0, 1, 0)
@@ -90,7 +87,7 @@ function enemy_mgr.enemy_die(id)
 	enemy[1]:ActDie()		
 	
 	-- remove bar
-	GameObject.Destroy(enemy[4])
+	ObjectPool.Recycle(enemy[4])
 
 	local sequence = DOTween.Sequence()
 	sequence:AppendInterval(2)

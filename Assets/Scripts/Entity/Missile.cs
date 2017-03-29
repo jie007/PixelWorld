@@ -25,21 +25,34 @@ public class Missile : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		rigidbody = GetComponent<Rigidbody>();
+	}
+
+	void OnEnable() {
 		timer = 0;
+	}
+
+	void OnDisable() {
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		timer += Time.deltaTime;
 		if (timer > Life) {
-			Destroy(gameObject);
+			ObjectPool.Recycle(gameObject);
 		}
 		rigidbody.velocity = transform.forward * Speed;
 	}
 
-	public void OnCollision() {
+
+	void OnTriggerEnter(Collider collider)   { 
+		Debug.Log("Missile:OnTriggerEnter");
+		string tag = collider.gameObject.tag;
+		if (tag == "") {
+		}
+
 		if (Type == MissileType.ONCE) {
-			Destroy(gameObject);
+			ObjectPool.Recycle(gameObject);
 		}
 	}
 }

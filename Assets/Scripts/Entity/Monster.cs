@@ -24,7 +24,6 @@ public class Monster : Character {
 			BattleManager.GetInstance ().EnemyHit (ID, player.ID);
 		} else if (tag == "PlayerMissile") {
 			Missile missile = collider.transform.GetComponent<Missile>();
-			missile.OnCollision();
 			Debug.Log("missile " + missile.ID);
 			ActHit();
 			BattleManager.GetInstance ().EnemyHit (ID, missile.ID);

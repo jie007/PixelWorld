@@ -32,6 +32,11 @@ function battle.init(obj)
 
 	lockview:SetTarget(this.player_tf)
 
+	-- object cache
+	ObjectPool.CreatePool("Hit", resMgr:LoadAsset('Prefabs/Effect/Hit'), 1)
+	ObjectPool.CreatePool('HealthBar', resMgr:LoadAsset('UI/Widget/HealthBar'), 1)
+	ObjectPool.CreatePool("CritNum", resMgr:LoadAsset('UI/Widget/CritNum'), 1)
+
 	-- enemy
 	enemy_mgr.init()
 end

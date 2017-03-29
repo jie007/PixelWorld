@@ -21,11 +21,7 @@ end
 function effect_mgr.create_hit_label(wpos, num)
 	local pos = battle.camera:WorldToScreenPoint(wpos)
 
-	local prefab = resMgr:LoadAsset('UI/Widget/CritNum')
-    local go = GameObject.Instantiate(prefab)
-	go.transform:SetParent(battle['canvas_top'])
-	go.transform.localScale = Vector3.one
-	go.transform.position = pos
+    local go = ObjectPool.Spawn('CritNum', battle['canvas_top'], pos)
 	text = go:GetComponent("Text")
 	text.text = num
 
@@ -36,7 +32,7 @@ function effect_mgr.create_hit_label(wpos, num)
 	sequence:Append(move)
 	sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
 		-- remove
-		GameObject.Destroy(go)
+		ObjectPool.Recycle(go)
 	end))
 	sequence:Play()
 
@@ -46,12 +42,10 @@ end
 
 function effect_mgr.create_hit(parent)
 	
-	local prefab = resMgr:LoadAsset('Prefabs/Effect/Hit')
-    local go = GameObject.Instantiate(prefab)
-	go.transform:SetParent(parent)
-	go.transform.localScale = Vector3.one
-	go.transform.localPosition = Vector3.New(0, 0.5, 0)
-	GameObject.Destroy(go, 0.5)
+    local go = ObjectPool.Spawn('Hit', parent, Vector3.New(0, 0.5, 0), 0.5)
+	--go.transform:SetParent(parent)
+	--go.transform.localScale = Vector3.one
+	--go.transform.localPosition = Vector3.New(0, 0.5, 0)
 end
 
 _G['effect_mgr'] = effect_mgr
