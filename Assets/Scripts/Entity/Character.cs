@@ -30,6 +30,9 @@ public class Character : MonoBehaviour {
 	public float DisSight = 10.0f;		// 可视范围
 	public float DisAttack = 1.0f; 		// 攻击范围
 
+
+	public bool IsControllable {get; set;}		// is contollable?
+
 	//动画组件
 	protected Animator m_Animator;
 
@@ -45,6 +48,7 @@ public class Character : MonoBehaviour {
 		AttackBox = transform.Find("AttackBox").gameObject;
 		AttackBox.SetActive(false);
 
+		IsControllable = true;
 	}
 
 	// Use this for initialization
@@ -80,7 +84,6 @@ public class Character : MonoBehaviour {
 		m_Animator.SetBool("bDie", true);
 	}
 
-
 	public IEnumerator ResetValue(string name)
 	{
 		yield return null;
@@ -99,5 +102,32 @@ public class Character : MonoBehaviour {
 		} else {
 			AttackBox.SetActive(false);
 		}
+	}
+
+
+	protected IEnumerator HitBack(Vector3 forward) {
+		IsControllable = false;
+
+		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/HitBack");
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
+		go.transform.localScale = Vector3.one;
+		go.transform.localPosition = transform.localPosition;
+		go.transform.forward = forward;
+		UpdateTransformFromAnimation script = go.GetComponent<UpdateTransformFromAnimation>();
+		script.target = this;
+
+		yield return null;
+
+		Debug.Log (script.bComplete);
+
+		while (script.bComplete) {
+			yield return null;
+		}
+		
+		Debug.Log (script.bComplete);
+
+		Destroy (go);
+
+		IsControllable = true;
 	}
 }

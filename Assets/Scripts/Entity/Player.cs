@@ -131,6 +131,9 @@ public class Player : Character {
 			Monster monster = collider.transform.parent.GetComponent<Monster>();
 			Debug.Log("Enemy " + monster.ID);
 			ActHit();
+			Vector3 offset = transform.position - monster.transform.position;
+			offset.y = 0;
+			StartCoroutine(HitBack (offset.normalized));
 			BattleManager.GetInstance ().PlayerHit (ID, monster.ID);
 		} else if (tag == "EnemyMissile") {
 			Missile missile = collider.transform.GetComponent<Missile>();
