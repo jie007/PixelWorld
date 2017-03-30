@@ -115,8 +115,9 @@ public class Player : Character {
 		}
 
 		// missile
-		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Effect/efx_arrow");
-		GameObject go = GameObject.Instantiate(prefab) as GameObject;
+		GameObject prefab = (GameObject)ResourceManager.GetInstance().LoadAsset("Prefabs/Effect/efx_arrow");
+		ObjectPool.CreatePool("efx_arrow", prefab, 1);
+		GameObject go = ObjectPool.Spawn("efx_arrow");
 		go.tag = gameObject.tag + "Missile";
 		go.transform.localScale = Vector3.one;
 		go.transform.forward = transform.forward;
