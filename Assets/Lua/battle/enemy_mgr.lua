@@ -25,7 +25,7 @@ end
 
 function enemy_mgr.create(id)
 
-	local monster = chMgr:AddEnemy(1001, math.random(2, 40), 0, math.random(2, 10))
+	local monster = chMgr:AddEnemy(1001, math.random(6, 40), 0, math.random(6, 15))
 	monster.ID = this.UID
 	this.UID = this.UID + 1
 

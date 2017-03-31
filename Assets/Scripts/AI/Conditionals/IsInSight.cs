@@ -39,12 +39,12 @@ namespace AI {
 				return TaskStatus.Failure;
 			}
 
-			target.Value = go.transform.position;
-
 	       		Vector3 offset = go.transform.position - transform.position;
 	       		distance.Value = offset.magnitude;
 
 			if (distance.Value <= _owner.DisSight) {
+				target.Value = go.transform.position;
+
 				// calculate dir
 	           		offset.y = 0;
 				direction.Value = offset.normalized;

@@ -3,16 +3,17 @@ using System.Collections;
 
 public class Monster : Character {
 
+	public Vector3 BornPosition {get;set;}
+
 	// Use this for initialization
 	void Start () {
-	
+		BornPosition = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
-
 
 	void OnTriggerEnter(Collider collider)   { 
 		Debug.Log("OnTriggerEnter");
