@@ -41,6 +41,9 @@ public class PlayerController : MonoBehaviour {
 	//移动管理
 	void MoveManager()
 	{
+		if (!m_Player.IsControllable)
+			return;
+		
 		//移动方向
 		Vector3 mDir=Vector3.zero;
 
