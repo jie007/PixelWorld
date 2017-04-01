@@ -128,6 +128,17 @@ using UnityEditor;
         }
 
         /// <summary>
+        /// 修改layer
+        /// </summary>
+        public static void ChangeLayers(Transform go, string layername) {
+        	int layer = LayerMask.NameToLayer(layername);
+        	Transform[] tfs = go.GetComponentsInChildren<Transform>();
+        	foreach(Transform tf in tfs) {
+        		tf.gameObject.layer = layer;
+        	}
+        }
+
+        /// <summary>
         /// 计算字符串的MD5值
         /// </summary>
         public static string md5(string source) {

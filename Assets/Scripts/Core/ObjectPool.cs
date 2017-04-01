@@ -175,8 +175,8 @@ public class ObjectPool : MonoBehaviour {
 				result = po.gameObject;
 				Transform trans = po.transform;
 				trans.SetParent(parent);
-				trans.position = position;
-				trans.rotation = rotation;
+				trans.localPosition = position;
+				trans.localRotation = rotation;
 			} else {
 				Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
 			}

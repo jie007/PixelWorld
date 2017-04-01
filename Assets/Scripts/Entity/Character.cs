@@ -42,7 +42,7 @@ public class Character : MonoBehaviour {
 
 	protected GameObject AttackBox;
 
-	void Awake() {
+	protected virtual void Awake() {
 		m_Animator = GetComponentInChildren<Animator>();
 
 		AttackBox = transform.Find("AttackBox").gameObject;
@@ -51,9 +51,7 @@ public class Character : MonoBehaviour {
 		IsControllable = true;
 	}
 
-	// Use this for initialization
-	void Start () {
-	
+	protected virtual void Start() {
 	}
 	
 	// Update is called once per frame
@@ -80,6 +78,7 @@ public class Character : MonoBehaviour {
 		StartCoroutine(ResetValue("bHit"));
 	}
 	public virtual void ActDie() {
+		IsControllable = false;
 		m_CharacterState = CharaterState.DEATH;
 		m_Animator.SetBool("bDie", true);
 	}
@@ -113,6 +112,7 @@ public class Character : MonoBehaviour {
 		go.transform.localScale = Vector3.one;
 		go.transform.localPosition = transform.localPosition;
 		go.transform.forward = forward;
+
 		UpdateTransformFromAnimation script = go.GetComponent<UpdateTransformFromAnimation>();
 		script.target = this;
 

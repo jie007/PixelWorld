@@ -17,9 +17,13 @@ function battle.init(obj)
 	gameObject = obj
 	transform = obj.transform
 
+	this.canvas_ui = GameObject.Find("Canvas").transform
 	this.canvas = GameObject.Find("Canvas Battle").transform
 	this.canvas_top = GameObject.Find("Canvas Battle Top").transform
-	local go_camera = GameObject.Find("Camera")
+
+	local go_camera_ui = GameObject.Find("UI Camera")
+	this.camera_ui = go_camera_ui:GetComponent('Camera')
+	local go_camera = GameObject.Find("Main Camera")
 	this.camera = go_camera:GetComponent('Camera')
 	local lockview = go_camera:GetComponent('LockViewCameraController')
 
@@ -36,6 +40,7 @@ function battle.init(obj)
 	ObjectPool.CreatePool("Hit", resMgr:LoadAsset('Prefabs/Effect/Hit'), 1)
 	ObjectPool.CreatePool('HealthBar', resMgr:LoadAsset('UI/Widget/HealthBar'), 1)
 	ObjectPool.CreatePool("CritNum", resMgr:LoadAsset('UI/Widget/CritNum'), 1)
+	ObjectPool.CreatePool("Coin", resMgr:LoadAsset('Prefabs/Item/coin'), 5)
 
 	-- enemy
 	enemy_mgr.init()
@@ -43,12 +48,21 @@ end
 
 function battle.init_scene()
 	--	new prefab in scene
-	local prefab = resMgr:LoadAsset('Prefabs/Scene/Box2')
-	for i = 0, 3 do
+	local prefab = resMgr:LoadAsset('Prefabs/Environment/box')
+	for i = 0, 5 do
 	    local go = GameObject.Instantiate(prefab)
 		go.transform:SetParent(transform)
 		go.transform.localScale = Vector3.one
-		go.transform.localPosition = Vector3.New(math.random(2, 40), 0, math.random(1, 10))
+		go.transform.localPosition = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
+		go.transform.localRotation = Quaternion.Euler(0, 180, 0)
+	end
+	local prefab = resMgr:LoadAsset('Prefabs/Environment/treasure')
+	for i = 0, 5 do
+	    local go = GameObject.Instantiate(prefab)
+		go.transform:SetParent(transform)
+		go.transform.localScale = Vector3.one
+		go.transform.localPosition = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
+		go.transform.localRotation = Quaternion.Euler(0, 180, 0)
 	end
 end
 

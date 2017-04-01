@@ -12,17 +12,15 @@ public class Player : Character {
 	protected GameObject SkillBox;
 
 	// Use this for initialization
-	void Start () {
+	protected override void Awake () {
+		base.Awake();
 
 		m_Controller=GetComponent<CharacterController>();
 
 		SkillBox = transform.Find("SkillBox").gameObject;
 		SkillBox.SetActive(false);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
+
 
 	public virtual void ActJump() {
 		Debug.Log("ActJump");
@@ -95,7 +93,7 @@ public class Player : Character {
 			// auto-rotate
 			float distance = 0;
 			Monster monster = CharacterManager.GetInstance().FindNearestEnemy(transform.position, out distance);
-			if (distance < DisAttack*10) {
+			if (distance < DisAttack*2) {
 				Vector3 offset = monster.transform.position - transform.position;
 				offset.y = 0;
 				transform.forward = offset.normalized;
@@ -108,7 +106,7 @@ public class Player : Character {
 		// auto-rotate
 		float distance = 0;
 		Monster monster = CharacterManager.GetInstance().FindNearestEnemy(transform.position, out distance);
-		if (distance < DisAttack*10) {
+		if (distance < DisAttack*5) {
 			Vector3 offset = monster.transform.position - transform.position;
 			offset.y = 0;
 			transform.forward = offset.normalized;

@@ -11,9 +11,6 @@ local enemy_mgr = {}
 local TAG = "enemy_mgr"
 local this = enemy_mgr
 
-local gameObject
-local transform
-
 function enemy_mgr.init()
 
 	this.UID = 0
@@ -25,7 +22,7 @@ end
 
 function enemy_mgr.create(id)
 
-	local monster = chMgr:AddEnemy(1001, math.random(6, 40), 0, math.random(6, 15))
+	local monster = chMgr:AddEnemy(1001, math.random(6, 40), 0, math.random(6, 12))
 	monster.ID = this.UID
 	this.UID = this.UID + 1
 
@@ -39,7 +36,7 @@ function enemy_mgr.create(id)
 	local slider = bar.transform:Find('Slider'):GetComponent('Slider') 
 	slider.value = 1
 
-	this.enemys[monster.ID] = {monster, go, transform, bar, slider}
+	this.enemys[monster.ID] = {monster, monster.gameObject, transform, bar, slider}
 end
 
 function enemy_mgr.Update()
@@ -48,7 +45,7 @@ function enemy_mgr.Update()
 		if this.enemys[k] then n = n + 1 end
 	end
 
-	if n < 5 then
+	if n < 3 then
 		this.create(1001)
 	end
 end
@@ -73,6 +70,36 @@ function enemy_mgr.enemy_hit(id, attack)
 	if hp == 0 then 
 		-- die, balance
 		this.enemy_die(id)
+
+		local pos = enemy[3].position+Vector3.New(0, 0.5, 0)
+   	 	local item = ObjectPool.Spawn('Coin', pos).transform
+		Util.ChangeLayers(item, 'Item')
+		
+		local rot = item:DORotate(Vector3.New(0, 720, 0), 1, DG.Tweening.RotateMode.FastBeyond360)
+		local move = item:DOMoveY(pos.y+1.5, 1, false)
+
+		local sequence = DOTween.Sequence()
+		sequence:Append(rot)
+		sequence:Join(move)
+		sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
+			item:SetParent(battle.canvas_ui)
+			local spos = battle.camera:WorldToScreenPoint(pos)
+			local wpos = battle.camera_ui:ScreenToWorldPoint(spos)
+			--wpos.z = 0
+			item.position = wpos
+			Util.ChangeLayers(item, 'UI')
+
+			local move = item:DOLocalMove(Vector3.New(-400, 250, 0), 1, false)
+			local sequence = DOTween.Sequence()
+			sequence:Append(move)
+			sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
+				ObjectPool.Recycle(item.gameObject)
+			end))
+			sequence:SetAutoKill()
+
+		end))
+		sequence:Play()
+		sequence:SetAutoKill()
 	end
 
 	return enemy
@@ -89,8 +116,14 @@ function enemy_mgr.enemy_die(id)
 	-- remove bar
 	ObjectPool.Recycle(enemy[4])
 
+	local renderer = enemy[2]:GetComponentInChildren(typeof(UnityEngine.SkinnedMeshRenderer))
+	local mat = renderer.material
+
+	alpha = mat:DOFade(0, 2)
+	
 	local sequence = DOTween.Sequence()
-	sequence:AppendInterval(2)
+	sequence:AppendInterval(1)
+	sequence:Append(alpha)
 	sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
 		-- remove
 		chMgr:Remove(enemy[1])
