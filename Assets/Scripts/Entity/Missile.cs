@@ -19,12 +19,12 @@ public class Missile : MonoBehaviour {
 	public float Speed = 4.0f;			// 移动速度
 	public float Life = 10.0f;
 
-	private Rigidbody rigidbody;
+	private Rigidbody _rigidbody;
 	private float timer;
 
 	// Use this for initialization
 	void Start () {
-		rigidbody = GetComponent<Rigidbody>();
+		_rigidbody = GetComponent<Rigidbody>();
 	}
 
 	void OnEnable() {
@@ -41,15 +41,12 @@ public class Missile : MonoBehaviour {
 		if (timer > Life) {
 			ObjectPool.Recycle(gameObject);
 		}
-		rigidbody.velocity = transform.forward * Speed;
+		_rigidbody.velocity = transform.forward * Speed;
 	}
 
 
 	void OnTriggerEnter(Collider collider)   { 
 		Debug.Log("Missile:OnTriggerEnter");
-		string tag = collider.gameObject.tag;
-		if (tag == "") {
-		}
 
 		if (Type == MissileType.ONCE) {
 			ObjectPool.Recycle(gameObject);

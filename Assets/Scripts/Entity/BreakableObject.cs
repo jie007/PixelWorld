@@ -35,6 +35,9 @@ public abstract class BreakableObject : MonoBehaviour {
 			IsBroken = true;
 			OnBreaking();
 
+			Player player = collider.transform.parent.GetComponent<Player>();
+			BattleManager.GetInstance ().PlayerBreak (ID, player.ID);
+
 			if (LifeTime > 0) StartCoroutine(delayForDestroy(LifeTime));
 		}
 	}

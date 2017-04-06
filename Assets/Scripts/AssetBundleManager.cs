@@ -199,6 +199,7 @@ public class AssetBundleManager : MonoBehaviour {
 					if (s_LoadedAssetBundles [dependency].refCount == 0) {
 						s_LoadedAssetBundles [dependency].Unload ();
 						s_LoadedAssetBundles.Remove (dependency);
+						Debug.LogFormat("AssetBundle unloaded : {0}", dependency);
 					}
 				}
 			}
@@ -211,6 +212,7 @@ public class AssetBundleManager : MonoBehaviour {
 			if (s_LoadedAssetBundles [assetBundleName].refCount == 0) {
 				s_LoadedAssetBundles [assetBundleName].Unload ();
 				s_LoadedAssetBundles.Remove (assetBundleName);
+				Debug.LogFormat("AssetBundle unloaded : {0}", assetBundleName);
 			}
 		}
 	}

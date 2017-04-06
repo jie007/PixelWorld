@@ -5,6 +5,9 @@ require "battle/enemy_mgr"
 require "battle/effect_mgr"
 
 local GameObject = UnityEngine.GameObject
+local Sequence = DG.Tweening.Sequence
+local Tweener = DG.Tweening.Tweener
+local DOTween = DG.Tweening.DOTween
 
 battle = {}
 local TAG = "battle"
@@ -17,12 +20,9 @@ function battle.init(obj)
 	gameObject = obj
 	transform = obj.transform
 
-	this.canvas_ui = GameObject.Find("Canvas").transform
-	this.canvas = GameObject.Find("Canvas Battle").transform
-	this.canvas_top = GameObject.Find("Canvas Battle Top").transform
+	this.canvas_bot = GameObject.Find("Canvas Bot").transform
+	this.canvas_hud = GameObject.Find("Canvas HUD").transform
 
-	local go_camera_ui = GameObject.Find("UI Camera")
-	this.camera_ui = go_camera_ui:GetComponent('Camera')
 	local go_camera = GameObject.Find("Main Camera")
 	this.camera = go_camera:GetComponent('Camera')
 	local lockview = go_camera:GetComponent('LockViewCameraController')
@@ -47,22 +47,35 @@ function battle.init(obj)
 end
 
 function battle.init_scene()
+
 	--	new prefab in scene
+
+	this.boxes = {}
+
+	local id = 0
+
 	local prefab = resMgr:LoadAsset('Prefabs/Environment/box')
+
 	for i = 0, 5 do
-	    local go = GameObject.Instantiate(prefab)
-		go.transform:SetParent(transform)
-		go.transform.localScale = Vector3.one
-		go.transform.localPosition = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
-		go.transform.localRotation = Quaternion.Euler(0, 180, 0)
+		local pos = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
+		local rot = Quaternion.Euler(0, 180, 0)
+	    local go = Util.Instantiate(prefab, transform, pos, rot)
+
+		local box = go:GetComponent('BreakableObject')
+		box.ID = id
+		this.boxes[id] = go.transform
+		id = id + 1
 	end
 	local prefab = resMgr:LoadAsset('Prefabs/Environment/treasure')
 	for i = 0, 5 do
-	    local go = GameObject.Instantiate(prefab)
-		go.transform:SetParent(transform)
-		go.transform.localScale = Vector3.one
-		go.transform.localPosition = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
-		go.transform.localRotation = Quaternion.Euler(0, 180, 0)
+		local pos = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
+		local rot = Quaternion.Euler(0, 180, 0)
+	    local go = Util.Instantiate(prefab, transform, pos, rot)
+
+		local box = go:GetComponent('BreakableObject')
+		box.ID = id
+		this.boxes[id] = go.transform
+		id = id + 1
 	end
 end
 
@@ -125,7 +138,6 @@ end
 function battle.player_enter_npc(id, npcid)
 	print("player_enter_npc", id, npcid)
 
-
 	if npcid == 0 then
 		facade:sendNotification(TIP, {data={lanMgr:GetValue('ITEM_COMPOSE_SUCCESS')}})
 	elseif npcid == 1 then
@@ -136,7 +148,69 @@ function battle.player_enter_npc(id, npcid)
 
 end
 
+function battle.player_break(id, playerid)
+	print("player_break", id, playerid)
+
+	local box = this.boxes[id]
+
+	this.drop_item(box.position + Vector3.New(0, 0.2, 0))
+end
+
+function battle.player_take_item(id, playerid)
+	print ('player_take_item', id)
+
+
+end
+
+
+function battle.drop_coin(pos)
+	local pos = pos+Vector3.New(0, 0.5, 0)
+	local item = ObjectPool.Spawn('Coin', pos).transform
+
+	local rot = item:DORotate(Vector3.New(0, 720, 0), 1, DG.Tweening.RotateMode.FastBeyond360)
+	local move = item:DOMoveY(pos.y+1.5, 1, false)
+
+	local sequence = DOTween.Sequence()
+	sequence:Append(rot)
+	sequence:Join(move)
+	sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
+		item:SetParent(battle.canvas_bot)
+		local spos = battle.camera:WorldToScreenPoint(item.position)
+		--local wpos = battle.camera:ScreenToWorldPoint(spos)
+		--item.position = wpos
+		print(spos.x, spos.y, spos.z)
+
+		local wpos = battle.camera:ScreenToWorldPoint(Vector3.New(50, 480, spos.z))
+		local move = item:DOMove(wpos, 1, false)
+		local sequence = DOTween.Sequence()
+		sequence:Append(move)
+		sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
+			ObjectPool.Recycle(item.gameObject)
+		end))
+		sequence:SetAutoKill()
+		
+	end))
+	sequence:Play()
+	sequence:SetAutoKill()
+end
+
+
+function battle.drop_item(pos)
+	local prefab = resMgr:LoadAsset('Prefabs/Item/crystal')
+
+    local go = Util.Instantiate(prefab, transform, pos)
+end
+
 function battle.destroy()
+	print('battle.destroy')
 	-- body
 	chMgr:RemoveAll()
+
+	resMgr:UnloadAsset('Prefabs/Effect/Hit')
+	resMgr:UnloadAsset('UI/Widget/HealthBar')
+	resMgr:UnloadAsset('UI/Widget/CritNum')
+	resMgr:UnloadAsset('Prefabs/Item/coin')
+	resMgr:UnloadAsset('Prefabs/Environment/treasure')
+	resMgr:UnloadAsset('Prefabs/Environment/box')
+
 end

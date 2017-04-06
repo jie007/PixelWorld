@@ -33,4 +33,12 @@ public class BattleManager : MonoBehaviour {
 	public void EnemyHit(int id, int attackid){
 		CallMethod("enemy_hit", id, attackid);
 	}
+
+	public void PlayerBreak(int id, int attackid){
+		CallMethod("player_break", id, attackid);
+	}
+
+	public void PlayerTakeItem(int id, int attackid){
+		CallMethod("player_take_item", id, attackid);
+	}
 }

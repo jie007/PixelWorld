@@ -135,14 +135,18 @@ public class Player : Character {
 			StartCoroutine(HitBack (offset.normalized));
 			BattleManager.GetInstance ().PlayerHit (ID, monster.ID);
 		} else if (tag == "EnemyMissile") {
-			Missile missile = collider.transform.GetComponent<Missile>();
+			Missile missile = collider.GetComponent<Missile>();
 			Debug.Log("missile " + missile.ID);
 			ActHit();
 			BattleManager.GetInstance ().PlayerHit (ID, missile.ID);
 		} else if (tag == "NPC") {
-			NPC npc = collider.transform.GetComponent<NPC>();
+			NPC npc = collider.GetComponent<NPC>();
 			BattleManager.GetInstance ().PlayerEnterNpc (ID, npc.ID);
-		} 
+		} else if (tag == "DropItem") {
+			DropItem dropItem = collider.GetComponent<DropItem>();
+			dropItem.OnHit();
+			BattleManager.GetInstance ().PlayerTakeItem (ID, dropItem.ID);
+		}
 	}  
 	void OnTriggerExit(Collider collider)  {  
 		//Debug.Log("OnTriggerExit");  

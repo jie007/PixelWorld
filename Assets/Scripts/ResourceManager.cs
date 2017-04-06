@@ -77,6 +77,21 @@ public class ResourceManager : MonoBehaviour {
 		}
 	}
 
+	public void UnloadAsset(string assetName) {
+		string assetBundleName = assetName.ToLower();
+
+		if (UpdateManager.GetInstance().LocalFiles.ContainsKey(assetBundleName)) {
+			AssetBundleManager.UnloadAssetBundle(assetBundleName);
+		} else {
+			// parent
+			string parent = assetBundleName.Substring(0, assetBundleName.LastIndexOf('/'));
+
+			if (UpdateManager.GetInstance().LocalFiles.ContainsKey(parent)) {
+				AssetBundleManager.UnloadAssetBundle(parent);
+			}
+		}
+	}
+
 	public static long GetFileSize(string filename) {
 		if (!File.Exists(filename)) {
 			Debug.LogFormat("GetFileSize: {0} not Exist!", filename);

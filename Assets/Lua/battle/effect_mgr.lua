@@ -21,7 +21,7 @@ end
 function effect_mgr.create_hit_label(wpos, num)
 	local pos = battle.camera:WorldToScreenPoint(wpos)
 
-    local go = ObjectPool.Spawn('CritNum', battle['canvas_top'])
+    local go = ObjectPool.Spawn('CritNum', battle.canvas_hud)
     go.transform.position = pos
 	text = go:GetComponent("Text")
 	text.text = num

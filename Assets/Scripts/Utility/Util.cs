@@ -138,6 +138,38 @@ using UnityEditor;
         	}
         }
 
+       // setposition
+       public static void SetPosition(Transform tf, float x, float y, float z) {
+       		tf.position = new Vector3(x, y, z);
+       }
+       public static void SetLocalPosition(Transform tf, float x, float y, float z) {
+       		tf.localPosition = new Vector3(x, y, z);
+       }
+       public static void SetLocalRotation(Transform tf, float x, float y, float z) {
+       		tf.localRotation = Quaternion.Euler(x, y, z);
+       }
+       public static void SetLocalScale(Transform tf, float x, float y, float z) {
+       		tf.localScale = new Vector3(x, y, z);
+       }
+       public static void SetLocalScale(Transform tf, float scale) {
+       		tf.localScale = new Vector3(scale, scale, scale);
+       }
+      
+	public static GameObject Instantiate(UnityEngine.Object prefab, Transform parent, Vector3 position, Quaternion rotation) {
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
+		go.transform.SetParent(parent);
+		//go.transform.localScale = Vector3.one;
+		go.transform.localPosition = position;
+		go.transform.localRotation = rotation;
+		return go;
+	}
+	public static GameObject Instantiate(UnityEngine.Object prefab, Transform parent, Vector3 position) {
+		return Util.Instantiate(prefab, parent, position, Quaternion.identity);
+	}
+	public static GameObject Instantiate(UnityEngine.Object prefab, Transform parent) {
+		return Util.Instantiate(prefab, parent, Vector3.zero, Quaternion.identity);
+	}
+
         /// <summary>
         /// 计算字符串的MD5值
         /// </summary>

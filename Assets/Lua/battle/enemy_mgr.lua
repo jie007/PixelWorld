@@ -28,7 +28,7 @@ function enemy_mgr.create(id)
 
 	local transform = monster.transform
 
-	local bar = ObjectPool.Spawn('HealthBar', battle.canvas)
+	local bar = ObjectPool.Spawn('HealthBar', battle.canvas_hud)
 	local follow = bar:GetComponent('Follow')
 	follow.target = transform
 	follow.offset = Vector3.New(0, 1, 0)
@@ -71,35 +71,7 @@ function enemy_mgr.enemy_hit(id, attack)
 		-- die, balance
 		this.enemy_die(id)
 
-		local pos = enemy[3].position+Vector3.New(0, 0.5, 0)
-   	 	local item = ObjectPool.Spawn('Coin', pos).transform
-		Util.ChangeLayers(item, 'Item')
-		
-		local rot = item:DORotate(Vector3.New(0, 720, 0), 1, DG.Tweening.RotateMode.FastBeyond360)
-		local move = item:DOMoveY(pos.y+1.5, 1, false)
-
-		local sequence = DOTween.Sequence()
-		sequence:Append(rot)
-		sequence:Join(move)
-		sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
-			item:SetParent(battle.canvas_ui)
-			local spos = battle.camera:WorldToScreenPoint(pos)
-			local wpos = battle.camera_ui:ScreenToWorldPoint(spos)
-			--wpos.z = 0
-			item.position = wpos
-			Util.ChangeLayers(item, 'UI')
-
-			local move = item:DOLocalMove(Vector3.New(-400, 250, 0), 1, false)
-			local sequence = DOTween.Sequence()
-			sequence:Append(move)
-			sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
-				ObjectPool.Recycle(item.gameObject)
-			end))
-			sequence:SetAutoKill()
-
-		end))
-		sequence:Play()
-		sequence:SetAutoKill()
+		battle.drop_coin(enemy[3].position)
 	end
 
 	return enemy
