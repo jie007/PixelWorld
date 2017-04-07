@@ -28,13 +28,18 @@ end
 
 --初始化面板--
 function PanelMenu.InitPanel()
-	local btnBag = transform:FindChild("Button Bag").gameObject
-	local btnEquip = transform:FindChild("Button Equip").gameObject
-	local btnBattle = transform:FindChild("Button Battle").gameObject
-	local btnShop = transform:FindChild("Button Shop").gameObject
-	local btnGift = transform:FindChild("Button Gift").gameObject
 
-	window = transform:GetComponent('LuaBehaviour')
+    local userProxy = facade:retrieveProxy("UserProxy")
+	local text_coin = transform:Find("Text Coin"):GetComponent('Text')
+	text_coin.text = userProxy.Coin
+
+	local btnBag = transform:Find("Button Bag").gameObject
+	local btnEquip = transform:Find("Button Equip").gameObject
+	local btnBattle = transform:Find("Button Battle").gameObject
+	local btnShop = transform:Find("Button Shop").gameObject
+	local btnGift = transform:Find("Button Gift").gameObject
+
+	local window = transform:GetComponent('LuaBehaviour')
 
 	window:AddClick(btnBag, this.OnBtnBag)
 	window:AddClick(btnEquip, this.OnBtnEquip)

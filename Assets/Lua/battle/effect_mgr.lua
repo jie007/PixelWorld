@@ -28,8 +28,12 @@ function effect_mgr.create_hit_label(wpos, num)
 
 	-- move
 	local rt = go:GetComponent('RectTransform')
+	local scale = rt:DOScale(2, 0.1)
+	local scale2 = rt:DOScale(1, 0.2)
+	local move = rt:DOMoveY(pos.y+50, 1, false)
 	local sequence = DOTween.Sequence()
-	move = rt:DOMoveY(pos.y+50, 1, false)
+	sequence:Append(scale)
+	sequence:Append(scale2)
 	sequence:Append(move)
 	sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
 		-- remove

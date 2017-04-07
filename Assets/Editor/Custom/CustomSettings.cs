@@ -71,7 +71,7 @@ public static class CustomSettings
         _GT(typeof(Camera)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         _GT(typeof(AudioSource)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
         //_GT(typeof(LineRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),
-        //_GT(typeof(TrailRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),    
+        _GT(typeof(TrailRenderer)).AddExtendType(typeof(DG.Tweening.ShortcutExtensions)),    
 #else
                                          
         _GT(typeof(Component)),
@@ -82,7 +82,7 @@ public static class CustomSettings
         _GT(typeof(Camera)),
         _GT(typeof(AudioSource)),
         //_GT(typeof(LineRenderer))
-        //_GT(typeof(TrailRenderer))
+        _GT(typeof(TrailRenderer))
 #endif
       
         _GT(typeof(Behaviour)),
@@ -176,6 +176,7 @@ public static class CustomSettings
 		_GT(typeof(Follow)),
 		_GT(typeof(LockViewCameraController)),
 		_GT(typeof(BreakableObject)),
+		_GT(typeof(DropItem)),
     };
 
     public static List<Type> dynamicList = new List<Type>()

@@ -15,14 +15,19 @@ local this = battle
 
 local gameObject
 local transform
+local userProxy
 
 function battle.init(obj)
 	gameObject = obj
 	transform = obj.transform
 
+    userProxy = facade:retrieveProxy("UserProxy")
+
 	this.canvas_bot = GameObject.Find("Canvas Bot").transform
 	this.canvas_hud = GameObject.Find("Canvas HUD").transform
 
+	local go_camera_ui = GameObject.Find("UI Camera")
+	this.camera_ui = go_camera_ui:GetComponent('Camera')
 	local go_camera = GameObject.Find("Main Camera")
 	this.camera = go_camera:GetComponent('Camera')
 	local lockview = go_camera:GetComponent('LockViewCameraController')
@@ -44,6 +49,8 @@ function battle.init(obj)
 
 	-- enemy
 	enemy_mgr.init()
+
+	this.dropitems = {}
 end
 
 function battle.init_scene()
@@ -153,19 +160,22 @@ function battle.player_break(id, playerid)
 
 	local box = this.boxes[id]
 
-	this.drop_item(box.position + Vector3.New(0, 0.2, 0))
+	this.drop_item(box.position + Vector3.New(0, 0.2, 0), id)
 end
 
-function battle.player_take_item(id, playerid)
-	print ('player_take_item', id)
+function battle.player_take_item(id, itemid)
+	print ('player_take_item', itemid)
 
-
+	GameObject.Destroy(this.dropitems[itemid])
 end
 
 
 function battle.drop_coin(pos)
 	local pos = pos+Vector3.New(0, 0.5, 0)
 	local item = ObjectPool.Spawn('Coin', pos).transform
+	Util.ChangeLayers(item, 'Item')
+	local trailrender = item:GetComponentInChildren(typeof(UnityEngine.TrailRenderer))
+	trailrender:Clear()
 
 	local rot = item:DORotate(Vector3.New(0, 720, 0), 1, DG.Tweening.RotateMode.FastBeyond360)
 	local move = item:DOMoveY(pos.y+1.5, 1, false)
@@ -174,18 +184,23 @@ function battle.drop_coin(pos)
 	sequence:Append(rot)
 	sequence:Join(move)
 	sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
-		item:SetParent(battle.canvas_bot)
-		local spos = battle.camera:WorldToScreenPoint(item.position)
-		--local wpos = battle.camera:ScreenToWorldPoint(spos)
-		--item.position = wpos
-		print(spos.x, spos.y, spos.z)
+		trailrender:Clear()
+		item:SetParent(this.canvas_bot)
+		Util.ChangeLayers(item, 'UI')
+		local spos = this.camera:WorldToScreenPoint(item.position)
+		spos.z = 100
+		local wpos = battle.camera_ui:ScreenToWorldPoint(spos)
+		item.position = wpos
 
-		local wpos = battle.camera:ScreenToWorldPoint(Vector3.New(50, 480, spos.z))
+		local wpos = this.camera_ui:ScreenToWorldPoint(Vector3.New(350, 500, spos.z))
 		local move = item:DOMove(wpos, 1, false)
 		local sequence = DOTween.Sequence()
 		sequence:Append(move)
 		sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
 			ObjectPool.Recycle(item.gameObject)
+
+			userProxy.Coin = userProxy.Coin + 1
+    		facade:sendNotification(COIN_CHANGE, {coin=userProxy.Coin})
 		end))
 		sequence:SetAutoKill()
 		
@@ -195,10 +210,24 @@ function battle.drop_coin(pos)
 end
 
 
-function battle.drop_item(pos)
+function battle.drop_item(pos, id, target)
 	local prefab = resMgr:LoadAsset('Prefabs/Item/crystal')
 
     local go = Util.Instantiate(prefab, transform, pos)
+
+	local item = go:GetComponent('DropItem')
+	item.ID = id
+	this.dropitems[id] = go
+
+	local move = go.transform:DOMoveY(pos.y+0.2, 1, false)	
+	local move2 = go.transform:DOMoveY(pos.y, 1, false)	
+	local sequence = DOTween.Sequence()
+	sequence:Append(move)
+	sequence:Append(move2)
+	sequence:SetLoops(-1)
+	sequence:Play()
+	sequence:SetAutoKill()
+
 end
 
 function battle.destroy()

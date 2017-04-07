@@ -75,6 +75,7 @@ function Network.OnMessage(key, data)
             local user = main_pb.User()
             user:ParseFromString(data:ReadBuffer())
             print(user.id, user.name, user.lv, user.exp, user.coin)
+            facade:retrieveProxy("UserProxy"):parse(user)
             facade:retrieveProxy("BagProxy"):parse(user.item)
             sceneMgr:GotoScene(SceneID.Main)
         elseif key == Protocol.ACK_ENTER then

@@ -11,6 +11,8 @@ this._name = 'PanelMain'
 function PanelMain.Awake(obj)
 	gameObject = obj
 	transform = obj.transform
+
+	this.InitPanel()
 end
 
 function PanelMain.OnDestroy()
@@ -26,4 +28,15 @@ end
 function PanelMain:handleNotification(notification)
 end
 
+
+--初始化面板--
+function PanelMain.InitPanel()
+
+    local userProxy = facade:retrieveProxy("UserProxy")
+
+    local rtt = transform:Find("CameraRTT")
+    local animator = rtt:GetComponentInChildren(typeof(UnityEngine.Animator))
+    animator:Play('run')
+	
+end
 return PanelMain

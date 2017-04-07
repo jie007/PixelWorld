@@ -32,7 +32,12 @@ facade = Facade:getInstance()
 facade:registerCommand(OPEN_WINDOW, require("controller/open_win_cmd").new())
 facade:registerCommand(WAIT, require("controller/wait_cmd").new())
 facade:registerCommand(TIP, require("controller/tip_cmd").new())
+
+-- model
+facade:registerProxy(require("model/user_proxy").new())
 facade:registerProxy(require("model/bag_proxy").new())
+
+-- view
 facade:registerMediator(require("window/PanelLogin"))
 facade:registerMediator(require("window/PanelMenu"))
 facade:registerMediator(require("window/PanelBag"))

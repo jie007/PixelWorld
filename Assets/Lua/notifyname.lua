@@ -4,6 +4,9 @@ OPEN_WINDOW = "open_window"
 WAIT = "wait"
 TIP = "tip"
 
+
+COIN_CHANGE = "coin_change"
+
 -- battle
 BATTLE_HP_CHANGE = "battle_hp_change"
 BATTLE_MP_CHANGE = "battle_mp_change"
