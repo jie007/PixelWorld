@@ -4,6 +4,16 @@ local TAG = "BagProxy"
 
 function BagProxy:ctor()
 	self._proxyName = "BagProxy"
+
+	self._items = {}
+	
+	-- test
+	self._items[100] = {num=102}
+	self._items[101] = {num=9}
+	self._items[102] = {num=10}
+	self._items[104] = {num=1000}
+	self._items[1000] = {num=1}
+	self._items[2001] = {num=6}
 end
 
 -- 解析

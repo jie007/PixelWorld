@@ -13,6 +13,8 @@ namespace AISystem
 		private Animator animator;
        		private NavMeshAgent agent;
 
+		private NavMeshPath path = new NavMeshPath ();
+
        		private System.Random random;
 
 		public override void OnAwake ()
@@ -38,13 +40,19 @@ namespace AISystem
 	           	offset.y = 0;
 
 			if (offset.magnitude > 1) {
-				animator.SetBool("bMoving", true);
 
 				if (agent.isOnNavMesh) {
 					transform.forward = offset.normalized;
-					bool moveable = agent.SetDestination(target.Value);
-					if (moveable == false) {
+
+					bool hasPath = agent.CalculatePath (target.Value, path);
+					if (path.status == NavMeshPathStatus.PathComplete && path.corners.Length > 1) {
+						animator.SetBool("bMoving", true);
+						//agent.SetPath (path);
+						agent.SetDestination(target.Value);
+					} else {
+						animator.SetBool("bMoving", false);
 						target.Value = transform.position;
+						return TaskStatus.Failure;
 					}
 				}
 			} else {
@@ -54,9 +62,9 @@ namespace AISystem
 				}
 				animator.SetBool("bMoving", false);
 				float randomValue = (float)random.NextDouble();
-				if (randomValue < 0.2f) {
-					target.Value = _owner.BornPosition + new Vector3(random.Next(-2, 2), 0, random.Next(-2, 2));
-				}
+				//if (randomValue < 0.5f) {
+					target.Value = _owner.BornPosition + new Vector3(((float)random.NextDouble()-0.5f)*4, 0, ((float)random.NextDouble()-0.5f)*4);
+				//}
 
 				return TaskStatus.Failure;
 

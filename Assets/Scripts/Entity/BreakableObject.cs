@@ -11,7 +11,6 @@ public abstract class BreakableObject : MonoBehaviour {
 	public float LifeTime;
 
 	public int ID {get; set;}			// uid
-	public int OwnID {get; set;}		// own id
 
 	public bool IsBroken {get; set;}
 
@@ -31,12 +30,12 @@ public abstract class BreakableObject : MonoBehaviour {
 		if (IsBroken) return;
 
 		string tag = collider.gameObject.tag;
-		if (tag == "Player") {
+		if (tag == "PlayerWeapon") {
 			IsBroken = true;
 			OnBreaking();
 
 			Player player = collider.transform.parent.GetComponent<Player>();
-			BattleManager.GetInstance ().PlayerBreak (ID, player.ID);
+			BattleManager.GetInstance ().PlayerBreak (ID, transform.position);
 
 			if (LifeTime > 0) StartCoroutine(delayForDestroy(LifeTime));
 		}

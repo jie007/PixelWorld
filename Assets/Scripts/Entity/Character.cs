@@ -81,6 +81,7 @@ public class Character : MonoBehaviour {
 		IsControllable = false;
 		m_CharacterState = CharaterState.DEATH;
 		m_Animator.SetBool("bDie", true);
+		AttackBox.SetActive(false);
 	}
 
 	public IEnumerator ResetValue(string name)

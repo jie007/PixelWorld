@@ -21,28 +21,31 @@ public class CharacterManager : MonoBehaviour {
 
 	private List<Character> m_Characters = new List<Character>();
 
-
-	public Player AddPlayer(float x, float y, float z) {
+	public Player AddPlayer(Vector3 pos, Quaternion rot) {
 		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Character/king");
-		GameObject go = GameObject.Instantiate(prefab) as GameObject;
-		go.transform.localScale = Vector3.one;
-		go.transform.localPosition = new Vector3(x, y, z);
-		go.transform.localRotation = Quaternion.identity;
+		GameObject go = GameObject.Instantiate(prefab, pos, rot) as GameObject;
+		//go.transform.localScale = Vector3.one;
 		Player player = go.GetComponent<Player>();
 		m_Characters.Add(player);
 		return player;
+	}
+
+	public Player AddPlayer(float x, float y, float z) {
+		return AddPlayer (new Vector3 (x, y, z), Quaternion.identity);
 	}  
 
-	public Monster AddEnemy(int id, float x, float y, float z) {
+	public Monster AddEnemy(int id, Vector3 pos, Quaternion rot) {
 		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Monster/"+id);
-		GameObject go = GameObject.Instantiate(prefab) as GameObject;
-		go.transform.localScale = Vector3.one;
-		go.transform.localPosition = new Vector3(x, y, z);
-		go.transform.localRotation = Quaternion.identity;
+		GameObject go = GameObject.Instantiate(prefab, pos, rot) as GameObject;
+		//go.transform.localScale = Vector3.one;
 		Monster monster = go.GetComponent<Monster>();
 		m_Characters.Add(monster);
 		return monster;
 	}  
+
+	public Monster AddEnemy(int id, float x, float y, float z) {
+		return AddEnemy (id, new Vector3 (x, y, z), Quaternion.identity);
+	}
 
 	public bool CheckEnemyInArea( Vector3 pos, float range) {
 		

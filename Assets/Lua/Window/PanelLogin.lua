@@ -43,7 +43,8 @@ end
 -- login
 function PanelLogin.OnBtnLogin(go)
 	print('OnBtnLogin')
-	Network.login('AdamWu', '123456')
+	--Network.login('AdamWu', '123456')
+    sceneMgr:GotoScene(SceneID.Main)
 end
 
 return PanelLogin

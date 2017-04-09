@@ -16,12 +16,14 @@ public class Monster : Character {
 		characterController = GetComponent<CharacterController>();
 		tree = GetComponent<BehaviorTree>();
 		agent = GetComponent<NavMeshAgent>();
+		//agent.enabled = false;
 	}
 
 	protected override void Start() {
 		base.Start();
 
 		BornPosition = transform.position;
+		//agent.enabled = true;
 	}
 	
 	// Update is called once per frame
@@ -38,9 +40,9 @@ public class Monster : Character {
 	}
 
 	void OnTriggerEnter(Collider collider)   { 
-		Debug.Log("OnTriggerEnter");
 		string tag = collider.gameObject.tag;
-		if (tag == "Player") {
+		Debug.Log("Enemy.OnTriggerEnter " + tag);  
+		if (tag == "PlayerWeapon") {
 			Player player = collider.transform.parent.GetComponent<Player>();
 			Debug.Log("player " + player.ID);
 			ActHit();

@@ -71,8 +71,8 @@ function Game.OnInitOK()
 
     math.randomseed(os.time())
     
-    networkMgr:OnInit()
-    networkMgr:SendConnect(CONFIG_SOCKET_IP, CONFIG_SOCKET_PORT)
+    --networkMgr:OnInit()
+    --networkMgr:SendConnect(CONFIG_SOCKET_IP, CONFIG_SOCKET_PORT)
 
     local data = resMgr:LoadAsset('Cfg/item'):ToString()
     CFG.items = json.decode(data)

@@ -36,7 +36,6 @@ function battle.init(obj)
 	this.player = nil
 	this.player_tf = nil
 
-	this.init_scene()
 	this.init_player()
 
 	lockview:SetTarget(this.player_tf)
@@ -53,46 +52,18 @@ function battle.init(obj)
 	this.dropitems = {}
 end
 
-function battle.init_scene()
-
-	--	new prefab in scene
-
-	this.boxes = {}
-
-	local id = 0
-
-	local prefab = resMgr:LoadAsset('Prefabs/Environment/box')
-
-	for i = 0, 5 do
-		local pos = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
-		local rot = Quaternion.Euler(0, 180, 0)
-	    local go = Util.Instantiate(prefab, transform, pos, rot)
-
-		local box = go:GetComponent('BreakableObject')
-		box.ID = id
-		this.boxes[id] = go.transform
-		id = id + 1
-	end
-	local prefab = resMgr:LoadAsset('Prefabs/Environment/treasure')
-	for i = 0, 5 do
-		local pos = Vector3.New(math.random(5, 40), 0, math.random(1, 10))
-		local rot = Quaternion.Euler(0, 180, 0)
-	    local go = Util.Instantiate(prefab, transform, pos, rot)
-
-		local box = go:GetComponent('BreakableObject')
-		box.ID = id
-		this.boxes[id] = go.transform
-		id = id + 1
-	end
-end
-
 function battle.init_player()
 
-	this.player = chMgr:AddPlayer(math.random(10, 20), 0, math.random(2, 10))
+	this.player = chMgr:AddPlayer(7, 6, 21)
 	this.player.ID = this.UID
 	this.UID = this.UID + 1
 
 	this.player_tf = this.player.transform
+end
+
+-- enmey 生成
+function battle.enemy_spawn(enemy)
+	enemy_mgr.spawn(enemy)
 end
 
 function battle.player_hit(id, attackid)
@@ -155,12 +126,11 @@ function battle.player_enter_npc(id, npcid)
 
 end
 
-function battle.player_break(id, playerid)
-	print("player_break", id, playerid)
+function battle.player_break(id, pos)
+	print("player_break", id, pos)
 
-	local box = this.boxes[id]
-
-	this.drop_item(box.position + Vector3.New(0, 0.2, 0), id)
+	this.drop_item(pos + Vector3.New(0, 0.2, 0), this.UID)
+	this.UID = this.UID + 1
 end
 
 function battle.player_take_item(id, itemid)
@@ -210,7 +180,7 @@ function battle.drop_coin(pos)
 end
 
 
-function battle.drop_item(pos, id, target)
+function battle.drop_item(pos, id)
 	local prefab = resMgr:LoadAsset('Prefabs/Item/crystal')
 
     local go = Util.Instantiate(prefab, transform, pos)

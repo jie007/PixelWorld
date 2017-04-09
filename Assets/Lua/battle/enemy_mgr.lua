@@ -20,13 +20,13 @@ function enemy_mgr.init()
 	UpdateBeat:Add(this.Update, this)
 end
 
-function enemy_mgr.create(id)
+function enemy_mgr.spawn(enemy)
 
-	local monster = chMgr:AddEnemy(1001, math.random(6, 40), 0, math.random(6, 12))
-	monster.ID = this.UID
+	local id = this.UID
+	enemy.ID = id
 	this.UID = this.UID + 1
 
-	local transform = monster.transform
+	local transform = enemy.transform
 
 	local bar = ObjectPool.Spawn('HealthBar', battle.canvas_hud)
 	local follow = bar:GetComponent('Follow')
@@ -36,18 +36,10 @@ function enemy_mgr.create(id)
 	local slider = bar.transform:Find('Slider'):GetComponent('Slider') 
 	slider.value = 1
 
-	this.enemys[monster.ID] = {monster, monster.gameObject, transform, bar, slider}
+	this.enemys[id] = {enemy, enemy.gameObject, transform, bar, slider}
 end
 
 function enemy_mgr.Update()
-	local n = 0
-	for k in pairs(this.enemys) do
-		if this.enemys[k] then n = n + 1 end
-	end
-
-	if n < 3 then
-		this.create(1001)
-	end
 end
 
 function enemy_mgr.get_enemy(id)

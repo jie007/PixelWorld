@@ -125,8 +125,8 @@ public class Player : Character {
 
 	void OnTriggerEnter(Collider collider)   { 
 		string tag = collider.gameObject.tag;
-		Debug.Log("OnTriggerEnter " + tag);  
-		if ( tag == "Enemy") {
+		Debug.Log("Player.OnTriggerEnter " + tag);  
+		if ( tag == "EnemyWeapon") {
 			Monster monster = collider.transform.parent.GetComponent<Monster>();
 			Debug.Log("Enemy " + monster.ID);
 			ActHit();

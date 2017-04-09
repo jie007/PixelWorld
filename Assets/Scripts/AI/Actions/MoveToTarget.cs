@@ -13,7 +13,8 @@ namespace AISystem
 		private Character _owner;
        		private Animator animator;
 		private CharacterController characterController;
-       		private NavMeshAgent agent;
+		private NavMeshAgent agent;
+		private NavMeshPath path = new NavMeshPath ();
 
 		public override void OnAwake ()
 		{
@@ -30,10 +31,17 @@ namespace AISystem
 	
 			transform.forward = direction.Value;
 			Vector3 move =  _owner.Speed * direction.Value * Time.deltaTime;
-			//transform.position += _owner.Speed * direction.Value * Time.deltaTime;
 			move.y = -10;
 			//characterController.Move(move);
-			agent.SetDestination(target.Value);
+
+			bool hasPath = agent.CalculatePath (target.Value, path);
+			if (path.status == NavMeshPathStatus.PathComplete && path.corners.Length > 0) {
+				agent.SetPath (path);
+			} else {
+				target.Value = transform.position;
+				return TaskStatus.Failure;
+			}
+			//agent.SetDestination(target.Value);
 
 			animator.SetBool("bAttack", false);
 			animator.SetBool("bMoving", true);

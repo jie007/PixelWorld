@@ -5,6 +5,10 @@ local TAG = "UserProxy"
 function UserProxy:ctor()
 	self._proxyName = "UserProxy"
 
+	-- test
+	self.UID = 100
+	self.Name = 'AdamWu'
+	self.Coin = math.random(100, 2000)
 end
 
 -- 解析

@@ -34,11 +34,17 @@ public class BattleManager : MonoBehaviour {
 		CallMethod("enemy_hit", id, attackid);
 	}
 
-	public void PlayerBreak(int id, int attackid){
-		CallMethod("player_break", id, attackid);
+	public void PlayerBreak(int id, Vector3 pos){
+		CallMethod("player_break", id, pos);
 	}
 
 	public void PlayerTakeItem(int id, int attackid){
 		CallMethod("player_take_item", id, attackid);
+	}
+
+	public Monster SpawnEnemy(int id, Vector3 pos, Quaternion rot){
+		Monster monster = CharacterManager.GetInstance ().AddEnemy (id, pos, rot);
+		CallMethod("enemy_spawn", monster);
+		return monster;
 	}
 }
