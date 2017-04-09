@@ -35,6 +35,9 @@ namespace AI {
 	       		}
 
 			Player player = go.GetComponent<Player> ();
+			if (player == null) {
+				return TaskStatus.Failure;
+			}
 			if (player.HP <= 0) {
 				return TaskStatus.Failure;
 			}
