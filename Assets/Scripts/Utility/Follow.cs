@@ -10,6 +10,8 @@ public class Follow : MonoBehaviour {
 
 	void Start () {
 		rectTransform = GetComponent<RectTransform>();
+
+		Update();
 	}
 
 	void Update () {

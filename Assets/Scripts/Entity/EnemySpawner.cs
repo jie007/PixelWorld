@@ -57,13 +57,13 @@ public class EnemySpawner : MonoBehaviour {
 	//spawn monster
 	void SpawnMonster()
 	{
-		Monster monster = BattleManager.GetInstance ().SpawnEnemy (monsterList [Random.Range (0, monsterList.Length)], RandomPostion (), Quaternion.identity);
+		Enemy enemy = BattleManager.GetInstance ().SpawnEnemy (monsterList [Random.Range (0, monsterList.Length)], RandomPostion (), Quaternion.identity);
 
 		for(int i=0;i < spawnList.Length;i++)
 		{
 			if(spawnList[i] == null)
 			{
-				spawnList[i] = monster;
+				spawnList[i] = enemy;
 				break;	
 			}
 		}

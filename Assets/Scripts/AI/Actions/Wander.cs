@@ -9,7 +9,7 @@ namespace AISystem
 	{
 		public SharedVector3 target;
 
-		private Monster _owner;
+		private Enemy _owner;
 		private Animator animator;
        		private NavMeshAgent agent;
 
@@ -19,7 +19,7 @@ namespace AISystem
 
 		public override void OnAwake ()
 		{
-			_owner = gameObject.GetComponent<Monster>();
+			_owner = gameObject.GetComponent<Enemy>();
 			random = new System.Random();
 			target.Value = transform.position;
 		}

@@ -34,23 +34,23 @@ public class CharacterManager : MonoBehaviour {
 		return AddPlayer (new Vector3 (x, y, z), Quaternion.identity);
 	}  
 
-	public Monster AddEnemy(int id, Vector3 pos, Quaternion rot) {
-		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Monster/"+id);
+	public Enemy AddEnemy(int id, Vector3 pos, Quaternion rot) {
+		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Enemy/"+id);
 		GameObject go = GameObject.Instantiate(prefab, pos, rot) as GameObject;
 		//go.transform.localScale = Vector3.one;
-		Monster monster = go.GetComponent<Monster>();
-		m_Characters.Add(monster);
-		return monster;
+		Enemy enemy = go.GetComponent<Enemy>();
+		m_Characters.Add(enemy);
+		return enemy;
 	}  
 
-	public Monster AddEnemy(int id, float x, float y, float z) {
+	public Enemy AddEnemy(int id, float x, float y, float z) {
 		return AddEnemy (id, new Vector3 (x, y, z), Quaternion.identity);
 	}
 
 	public bool CheckEnemyInArea( Vector3 pos, float range) {
 		
 		foreach(Character ch in m_Characters) {
-			if (ch is Monster) {
+			if (ch is Enemy) {
 				Vector3 offset = ch.transform.position - pos;
 				if (offset.magnitude < range) {
 					return true;
@@ -61,15 +61,15 @@ public class CharacterManager : MonoBehaviour {
 		return false;
 	}
 
-	public Monster FindNearestEnemy(Vector3 pos, out float distance) {
-		Monster ret = null;
+	public Enemy FindNearestEnemy(Vector3 pos, out float distance) {
+		Enemy ret = null;
 		distance = float.MaxValue;
 		foreach(Character ch in m_Characters) {
-			if (ch is Monster) {
+			if (ch is Enemy && ch.IsAlive()) {
 				Vector3 offset = ch.transform.position - pos;
 				if (offset.magnitude < distance) {
 					distance = offset.magnitude;
-					ret = ch as Monster;
+					ret = ch as Enemy;
 				}
 			}
 		}

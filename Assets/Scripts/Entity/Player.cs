@@ -82,35 +82,27 @@ public class Player : Character {
 		}
 	}
 
+	// auto-rotate
+	public void AutoRotateToEnemy() {
+		float distance = 0;
+		Enemy enemy = CharacterManager.GetInstance().FindNearestEnemy(transform.position, out distance);
+		if (distance < DisAttack*3) {
+			Vector3 offset = enemy.transform.position - transform.position;
+			offset.y = 0;
+			transform.forward = offset.normalized;
+		}
+	}
+
 	protected override void StartAttack ()
 	{
 		base.StartAttack ();
 
-		bool hasEnemy = CharacterManager.GetInstance().CheckEnemyInArea(AttackBox.transform.position, DisAttack);
-		Debug.Log("hasEnemy " + hasEnemy);
 
-		if (hasEnemy == false) {
-			// auto-rotate
-			float distance = 0;
-			Monster monster = CharacterManager.GetInstance().FindNearestEnemy(transform.position, out distance);
-			if (distance < DisAttack*2) {
-				Vector3 offset = monster.transform.position - transform.position;
-				offset.y = 0;
-				transform.forward = offset.normalized;
-			}
-		}
 	}
 
 	protected void StartSkill1 ()
 	{
-		// auto-rotate
-		float distance = 0;
-		Monster monster = CharacterManager.GetInstance().FindNearestEnemy(transform.position, out distance);
-		if (distance < DisAttack*5) {
-			Vector3 offset = monster.transform.position - transform.position;
-			offset.y = 0;
-			transform.forward = offset.normalized;
-		}
+
 
 		// missile
 		GameObject prefab = (GameObject)ResourceManager.GetInstance().LoadAsset("Prefabs/Effect/efx_arrow");
@@ -127,13 +119,13 @@ public class Player : Character {
 		string tag = collider.gameObject.tag;
 		Debug.Log("Player.OnTriggerEnter " + tag);  
 		if ( tag == "EnemyWeapon") {
-			Monster monster = collider.transform.parent.GetComponent<Monster>();
-			Debug.Log("Enemy " + monster.ID);
+			Enemy enemy = collider.transform.parent.GetComponent<Enemy>();
+			Debug.Log("Enemy " + enemy.ID);
 			ActHit();
-			Vector3 offset = transform.position - monster.transform.position;
+			Vector3 offset = transform.position - enemy.transform.position;
 			offset.y = 0;
 			StartCoroutine(HitBack (offset.normalized));
-			BattleManager.GetInstance ().PlayerHit (ID, monster.ID);
+			BattleManager.GetInstance ().PlayerHit (ID, enemy.ID);
 		} else if (tag == "EnemyMissile") {
 			Missile missile = collider.GetComponent<Missile>();
 			Debug.Log("missile " + missile.ID);

@@ -3,7 +3,6 @@
 	Properties {
 		_Color ("Main Color", Color) = (1,1,1,1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_Brightness ("Brightness", Range(1.0, 2.0)) = 1
 	}
 
 	SubShader {
@@ -11,8 +10,8 @@
 		LOD 100
 
 		Pass {
-			ZWrite on  
-            ZTest less
+			ZWrite On  
+            ZTest Less
 			Blend SrcAlpha OneMinusSrcAlpha
 			
 			CGPROGRAM
@@ -23,7 +22,6 @@
 			
 			sampler2D _MainTex;
 			float4	_Color;
-			float _Brightness;
 			
 			struct appdata {
 				float4 vertex : POSITION;
@@ -45,7 +43,7 @@
 			fixed4 frag(v2f i) : COLOR
 			{
 				fixed4 color = tex2D(_MainTex, i.uv);
-				return color * _Brightness * _Color;
+				return color * _Color;
 			}
 			ENDCG
 		}

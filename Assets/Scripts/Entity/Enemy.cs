@@ -2,7 +2,7 @@
 using System.Collections;
 using BehaviorDesigner.Runtime;
 
-public class Monster : Character {
+public class Enemy : Character {
 
 	public Vector3 BornPosition {get;set;}
 
@@ -37,6 +37,9 @@ public class Monster : Character {
 		characterController.enabled = false;
 		tree.enabled = false;
 		agent.Stop();
+
+		// hit fly
+
 	}
 
 	void OnTriggerEnter(Collider collider)   { 

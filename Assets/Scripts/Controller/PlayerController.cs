@@ -3,11 +3,10 @@ using System.Collections;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerController : MonoBehaviour {
- 
+
+	public float JumpHeight = 4;
 	//重力
 	public float Gravity=10;
-	//速度
-	private float mSpeed;
 
 	//
 	private float yMove = 0;	// 垂直速度
@@ -22,6 +21,8 @@ public class PlayerController : MonoBehaviour {
 	private Animator m_Animator;
 
 	private Player m_Player;
+
+	private bool hasAdjustRotation;
 
 	void Start ()
 	{
@@ -89,12 +90,14 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if (bJump) {
-			yMove = 5;
+			yMove = JumpHeight;
 			Debug.LogFormat("bJump {0}", bJump);
 		}
 
 		m_Animator.SetBool("isMoving", isMoving);
-		m_Animator.SetBool("isGrounded", m_Controller.isGrounded);
+		//if (m_Animator.GetBool("isGrounded") != m_Controller.isGrounded) {
+			m_Animator.SetBool("isGrounded", m_Controller.isGrounded);
+		//}
 
 		AnimatorStateInfo cur = m_Animator.GetCurrentAnimatorStateInfo(0);
 		if (m_Animator.IsInTransition(0)) {
@@ -116,6 +119,7 @@ public class PlayerController : MonoBehaviour {
 				m_Animator.SetBool("bHit", false);
 				//Debug.Log("run");
 			} else if (cur.IsName("idle")) {
+				hasAdjustRotation = false;
 				move.x = 0;
 				move.z = 0;
 				m_Animator.SetBool("bJump", bJump);
@@ -128,12 +132,20 @@ public class PlayerController : MonoBehaviour {
 				//Debug.Log("idle");
 			} else if (cur.IsName("jump")) {
 				if (yMove > 0 && cur.normalizedTime < 0.5f) {	// 开始jump
+					move *= 0.8f;
 					move.y = yMove;		// 向上初速度
 					yMove = 0;
+					m_Animator.SetBool("isGrounded", false);
 				}
 				Debug.Log("jump " + cur.normalizedTime);
 			} else if (cur.IsName("attack1_1")) {
-				if (isMoving)  transform.forward = mDir;
+				if (hasAdjustRotation == false) {
+					m_Player.AutoRotateToEnemy();
+					hasAdjustRotation = true;
+				} else {
+					// allow rotate while attack
+					if (isMoving)  transform.forward = mDir;
+				}
 				move.x = 0;
 				move.z = 0;
 				if (bAttack && m_AttackIdx == 1) {
@@ -157,6 +169,10 @@ public class PlayerController : MonoBehaviour {
 				move.z = 0;
 				m_Animator.SetBool("bHit", false);
 			} else if (cur.IsName("skill1")) {
+				if (hasAdjustRotation == false) {
+					m_Player.AutoRotateToEnemy();
+					hasAdjustRotation = true;
+				}
 				move.x = 0;
 				move.z = 0;
 				m_Animator.SetBool("bSkill1", false);

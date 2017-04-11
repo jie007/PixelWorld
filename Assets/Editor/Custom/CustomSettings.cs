@@ -172,7 +172,7 @@ public static class CustomSettings
 
 		_GT(typeof(Character)),
 		_GT(typeof(Player)),
-		_GT(typeof(Monster)),
+		_GT(typeof(Enemy)),
 		_GT(typeof(Follow)),
 		_GT(typeof(LockViewCameraController)),
 		_GT(typeof(BreakableObject)),

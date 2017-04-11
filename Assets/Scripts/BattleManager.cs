@@ -42,9 +42,9 @@ public class BattleManager : MonoBehaviour {
 		CallMethod("player_take_item", id, attackid);
 	}
 
-	public Monster SpawnEnemy(int id, Vector3 pos, Quaternion rot){
-		Monster monster = CharacterManager.GetInstance ().AddEnemy (id, pos, rot);
-		CallMethod("enemy_spawn", monster);
-		return monster;
+	public Enemy SpawnEnemy(int id, Vector3 pos, Quaternion rot){
+		Enemy enemy = CharacterManager.GetInstance ().AddEnemy (id, pos, rot);
+		CallMethod("enemy_spawn", enemy);
+		return enemy;
 	}
 }

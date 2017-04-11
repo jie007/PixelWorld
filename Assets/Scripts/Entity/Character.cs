@@ -30,8 +30,9 @@ public class Character : MonoBehaviour {
 	public float DisSight = 10.0f;		// 可视范围
 	public float DisAttack = 1.0f; 		// 攻击范围
 
-
 	public bool IsControllable {get; set;}		// is contollable?
+
+	public bool IsAlive() { return HP > 0; }
 
 	//动画组件
 	protected Animator m_Animator;
@@ -56,7 +57,7 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 
 	public virtual void ActIdle() {
@@ -126,6 +127,31 @@ public class Character : MonoBehaviour {
 		}
 		
 		Debug.Log (script.bComplete);
+
+		Destroy (go);
+
+		IsControllable = true;
+	}
+
+	protected IEnumerator HitFly(Vector3 forward) {
+		IsControllable = false;
+
+		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/HitFly");
+		GameObject go = GameObject.Instantiate(prefab) as GameObject;
+		go.transform.localScale = Vector3.one;
+		go.transform.localPosition = transform.localPosition;
+		go.transform.forward = forward;
+
+		UpdateTransformFromAnimation script = go.GetComponent<UpdateTransformFromAnimation>();
+		script.target = this;
+
+		yield return null;
+
+		Debug.Log (script.bComplete);
+
+		while (script.bComplete) {
+			yield return null;
+		}
 
 		Destroy (go);
 
