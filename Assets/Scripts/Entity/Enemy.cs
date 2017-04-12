@@ -34,12 +34,9 @@ public class Enemy : Character {
 	public override void ActDie() {
 		base.ActDie();
 
-		characterController.enabled = false;
+		//characterController.enabled = false;
 		tree.enabled = false;
 		agent.Stop();
-
-		// hit fly
-
 	}
 
 	void OnTriggerEnter(Collider collider)   { 
@@ -48,11 +45,15 @@ public class Enemy : Character {
 		if (tag == "PlayerWeapon") {
 			Player player = collider.transform.parent.GetComponent<Player>();
 			Debug.Log("player " + player.ID);
-			ActHit();
 			Vector3 offset = transform.position - player.transform.position;
 			offset.y = 0;
-			StartCoroutine(HitBack (offset.normalized));
 			BattleManager.GetInstance ().EnemyHit (ID, player.ID);
+			if (HP > 0) {
+				ActHit();
+				StartCoroutine(HitBack (offset.normalized));
+			} else {
+				StartCoroutine(HitFly (offset.normalized));
+			}
 		} else if (tag == "PlayerMissile") {
 			Missile missile = collider.transform.GetComponent<Missile>();
 			Debug.Log("missile " + missile.ID);

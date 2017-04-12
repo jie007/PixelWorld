@@ -35,7 +35,6 @@ class Pool {
 	//o(1)
 	private void AddObjectToPool(PoolObject po) {
 		//add to pool
-		po.gameObject.SetActive(false);
 		availableObjStack.Push(po);
 		po.isPooled = true;
 		po.transform.SetParent(parent.transform);
@@ -69,7 +68,6 @@ class Pool {
 
 		if(po != null) {
 			po.isPooled = false;
-			po.gameObject.SetActive(true);
 		}
 		
 		return po;
@@ -177,6 +175,8 @@ public class ObjectPool : MonoBehaviour {
 				trans.SetParent(parent);
 				trans.localPosition = position;
 				trans.localRotation = rotation;
+
+				po.gameObject.SetActive(true);
 			} else {
 				Debug.LogWarning("No object available in pool. Consider setting fixedSize to false.: " + poolName);
 			}
@@ -220,7 +220,7 @@ public class ObjectPool : MonoBehaviour {
 			if(instance.poolDictionary.ContainsKey(po.poolName)) {
 				Pool pool = instance.poolDictionary[po.poolName];
 				pool.ReturnObjectToPool(po);
-				po.transform.SetParent(instance.transform);
+				po.gameObject.SetActive(false);
 			} else {
 				Debug.LogWarning("No pool available with name: " + po.poolName);
 			}

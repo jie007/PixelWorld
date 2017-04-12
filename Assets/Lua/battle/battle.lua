@@ -66,6 +66,10 @@ function battle.enemy_spawn(enemy)
 	enemy_mgr.spawn(enemy)
 end
 
+function battle.camera_shake()
+	local shake = this.camera:DOShakePosition(0.3, 0.2, 20, 90)
+end
+
 function battle.player_hit(id, attackid)
 	print("player_hit", id, attackid)
 
@@ -94,6 +98,7 @@ function battle.player_hit(id, attackid)
 	effect_mgr.create_hit_label(pos, -attack)
 	effect_mgr.create_hit(this.player_tf)
 	
+	this.camera_shake()
 end
 
 function battle.enemy_hit(id, attackid)

@@ -12,10 +12,11 @@ public class FullViewCameraController : MonoBehaviour {
 	public Transform target; //a target look at
 	public float height;
 	public float distance;
-	public float xSpeed; //speed pan x
-	public float ySpeed; //speed pan y
-	public float yMinLimit; //y min limit
-	public float yMaxLimit; //y max limit
+	[Range(0f, 10f)] public float xSpeed; //speed pan x
+	[Range(0f, 10f)] public float ySpeed; //speed pan y
+	[Range(0f, 90f)] public float yMinLimit; //y min limit
+	[Range(0f, 90f)] public float yMaxLimit; //y max limit
+	public float turnSmoothing = 2f;   
 	public bool protectFromWallClip = true;
 	public LayerMask clipLayer;
 
@@ -75,12 +76,10 @@ public class FullViewCameraController : MonoBehaviour {
 		Quaternion rotation = Quaternion.Euler(m_TiltAngle, m_LookAngle, 0);
 
 		Vector3 targetPos = target.position + new Vector3(0, height, 0);
-
 		Vector3 calPos = new Vector3(0, 0, -distance);
 
-		Vector3 position = rotation * calPos + targetPos;
-
-		transform.rotation = rotation;
+		transform.rotation = Quaternion.Lerp(transform.rotation, rotation, turnSmoothing*Time.fixedDeltaTime);
+		Vector3 position = transform.rotation * calPos + targetPos;
 		transform.position = Vector3.Lerp(transform.position, position, Time.time);
 
 		// clip from walls
