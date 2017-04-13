@@ -25,6 +25,7 @@ namespace AISystem
 			if (agent.hasPath) {
 				agent.ResetPath();
 			}
+			agent.avoidancePriority = 30;
 	        }
 		
 		public override TaskStatus OnUpdate ()

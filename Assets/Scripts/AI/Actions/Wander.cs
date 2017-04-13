@@ -49,7 +49,10 @@ namespace AISystem
 						animator.SetBool("bMoving", true);
 						//agent.SetPath (path);
 						agent.SetDestination(target.Value);
+
+						agent.avoidancePriority = 50;
 					} else {
+						agent.avoidancePriority = 40;
 						animator.SetBool("bMoving", false);
 						target.Value = transform.position;
 						return TaskStatus.Failure;
@@ -61,6 +64,7 @@ namespace AISystem
 					agent.ResetPath();
 				}
 				animator.SetBool("bMoving", false);
+				agent.avoidancePriority = 40;
 				float randomValue = (float)random.NextDouble();
 				//if (randomValue < 0.5f) {
 					target.Value = _owner.BornPosition + new Vector3(((float)random.NextDouble()-0.5f)*4, 0, ((float)random.NextDouble()-0.5f)*4);

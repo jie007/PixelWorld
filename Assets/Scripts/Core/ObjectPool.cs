@@ -35,6 +35,7 @@ class Pool {
 	//o(1)
 	private void AddObjectToPool(PoolObject po) {
 		//add to pool
+		po.gameObject.SetActive(false);
 		availableObjStack.Push(po);
 		po.isPooled = true;
 		po.transform.SetParent(parent.transform);
@@ -168,6 +169,8 @@ public class ObjectPool : MonoBehaviour {
 			Pool pool = instance.poolDictionary[poolName];
 			PoolObject po = pool.NextAvailableObject();
 
+			po.gameObject.SetActive(false);
+
 			if(po != null) {
 				po.lifetime = lifetime;
 				result = po.gameObject;
@@ -220,7 +223,6 @@ public class ObjectPool : MonoBehaviour {
 			if(instance.poolDictionary.ContainsKey(po.poolName)) {
 				Pool pool = instance.poolDictionary[po.poolName];
 				pool.ReturnObjectToPool(po);
-				po.gameObject.SetActive(false);
 			} else {
 				Debug.LogWarning("No pool available with name: " + po.poolName);
 			}

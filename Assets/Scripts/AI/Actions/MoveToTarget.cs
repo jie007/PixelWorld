@@ -37,7 +37,9 @@ namespace AISystem
 			bool hasPath = agent.CalculatePath (target.Value, path);
 			if (path.status == NavMeshPathStatus.PathComplete && path.corners.Length > 0) {
 				agent.SetPath (path);
+				agent.avoidancePriority = 50;
 			} else {
+				agent.avoidancePriority = 40;
 				target.Value = transform.position;
 				return TaskStatus.Failure;
 			}
