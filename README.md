@@ -19,7 +19,12 @@ some plugins using in this project：
 * AssetBundle Manager 
 * Self-Update (assetbundle&lua)
 * AI
-* pixel world generate (todo)
+
+## TODO-List
+* RPG Elements
+* RPG Skill System
+* AssetBundle Mgr Optimize
+* pixel world generate
 
 ## Update (AssetBundle)
 our version-file format are like this:
