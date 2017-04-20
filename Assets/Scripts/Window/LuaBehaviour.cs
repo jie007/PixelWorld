@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class LuaBehaviour : MonoBehaviour {
        
-		private Dictionary<string, LuaFunction> buttons = new Dictionary<string, LuaFunction>();
+	private Dictionary<string, LuaFunction> buttons = new Dictionary<string, LuaFunction>();
 
         protected void Awake() {
         	Util.CallMethod(name, "Awake", gameObject);
@@ -33,7 +33,7 @@ public class LuaBehaviour : MonoBehaviour {
             buttons.Add(go.name, luafunc);
             go.GetComponent<Button>().onClick.AddListener(
                 delegate() {
-                    luafunc.Call(go);
+                    if(luafunc.IsAlive) luafunc.Call(go);
                 }
             );
         }
@@ -72,6 +72,5 @@ public class LuaBehaviour : MonoBehaviour {
 
 		Util.ClearMemory();
 		Debug.Log("~" + name + " was destroy!");
-
         }
 }

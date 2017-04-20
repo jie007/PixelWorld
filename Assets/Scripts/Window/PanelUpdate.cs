@@ -93,14 +93,8 @@ public class PanelUpdate : MonoBehaviour {
 				LuaFileUtils.Instance.AddSearchBundle(name, assetBundle);
 			}
 		}
-		//add lua assetbundle
-		/*
-		Dictionary<string, AssetBundle> assetBundles = AssetBundleManager.GetInstance().LoadedAssetBundles;
-		foreach(string assetBundleName in assetBundles.Keys) {
-			string name = Path.GetFileNameWithoutExtension(assetBundleName);
-			LuaFileUtils.Instance.AddSearchBundle(name, assetBundles[assetBundleName]);
-		}
-		*/
+
+		// 
 		LuaManager luaManager = LuaManager.GetInstance(true);
 		luaManager.InitStart();
 		luaManager.DoFile("Game");

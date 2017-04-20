@@ -48,7 +48,7 @@ public class AssetBundleManager : MonoBehaviour {
 	}
 
 
-	static string s_BaseDownloadingURL = GameConfig.WebUrl;
+	static string s_BaseDownloadingURL = GameConfig.CdnURL;
 	public string BaseDownloaindURL {get {return s_BaseDownloadingURL;}}
 
 
