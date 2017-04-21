@@ -102,10 +102,8 @@ public class Player : Character {
 
 	protected void StartSkill1 ()
 	{
-
-
 		// missile
-		GameObject prefab = (GameObject)ResourceManager.GetInstance().LoadAsset("Prefabs/Effect/efx_arrow");
+		GameObject prefab = (GameObject)ResourceManager.GetInstance().LoadAsset("Prefabs/Effect/Skill/Fx_arrow");
 		ObjectPool.CreatePool("efx_arrow", prefab, 1);
 		GameObject go = ObjectPool.Spawn("efx_arrow");
 		go.tag = gameObject.tag + "Missile";
