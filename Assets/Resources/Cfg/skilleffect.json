@@ -1,0 +1,16 @@
+{
+"100":{"name": "增加hp", "trigger":0, "opearation":1, "args":[0, 30]},
+"101":{"name": "增加hp（百分比）", "trigger":0, "opearation":1, "args":[1, 1]},
+"102":{"name": "增加sp", "trigger":0, "opearation":2, "args":[0, 10]},
+"103":{"name": "增加sp（百分比）", "trigger":0, "opearation":2, "args":[1, 2]},
+"102":{"name": "命中恢复hp", "trigger":2, "opearation":1, "args":[0, 10]},
+"103":{"name": "命中恢复hp（百分比）", "trigger":2, "opearation":1, "args":[1, 1]},
+"107":{"name": "命中恢复sp", "trigger":2, "opearation":2, "args":[0, 10]},
+"108":{"name": "命中恢复sp（百分比）", "trigger":2, "opearation":2, "args":[1, 2]},
+"110":{"name": "buff-回血", "trigger":0, "opearation":3, "args":[100]},
+"111":{"name": "命中buff-晕眩", "trigger":2, "opearation":3, "args":[102]},
+"112":{"name": "buff-护盾", "trigger":0, "opearation":3, "args":[101]},
+
+"1000":{"name": "发射一只眩晕箭", "trigger":1, "opearation":4, "args":[]},
+"1001":{"name": "射出一只箭", "trigger":1, "opearation":4, "args":[]},
+}

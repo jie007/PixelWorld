@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SoundManager : MonoBehaviour {
+public class SoundManager : Singleton<SoundManager> {
 
 	// ui sound
 	public static readonly string UI_BG_LOGIN = "UI/g_login";
@@ -22,17 +22,6 @@ public class SoundManager : MonoBehaviour {
 	private Dictionary<string, AudioSource> _dic_bgms = new Dictionary<string, AudioSource>();
 
 	private static AudioSource _audioSourceSE;
-
-	public static SoundManager instance;
-	static SoundManager() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-		instance = main.AddComponent<SoundManager>();
-
-	}
 
 	void Awake() {
 	}

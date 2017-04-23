@@ -31,7 +31,7 @@ public class PanelUpdate : MonoBehaviour {
 	public void RequestVersion() {
 		panel_alert.SetActive(false);
 		text_msg.text = "检查更新";
-		UpdateManager.GetInstance().RequestVersion(delegate (WWW www){
+		UpdateManager.Instance.RequestVersion(delegate (WWW www){
 			if (www.error != null) {
 				Debug.LogError("downloading error! " + www.error);
 				panel_alert.SetActive(true);
@@ -39,13 +39,13 @@ public class PanelUpdate : MonoBehaviour {
 				return;
 			}
 
-			bool bNeedUpdate = UpdateManager.GetInstance().CompareVersion(www.text);
+			bool bNeedUpdate = UpdateManager.Instance.CompareVersion(www.text);
 
 			// download resources
 			if (bNeedUpdate) {
-				string[] files = UpdateManager.GetInstance().UpdateFiles;
+				string[] files = UpdateManager.Instance.UpdateFiles;
 				int count = 1;
-				AssetBundleManager.GetInstance().SetDownloadCallback(delegate {
+				AssetBundleManager.Instance.SetDownloadCallback(delegate {
 					text_msg.text = string.Format("更新资源({0}/{1})", count++, files.Length);
 				});
 				for(int i = 0; i < files.Length; i ++) {
@@ -74,18 +74,20 @@ public class PanelUpdate : MonoBehaviour {
 	// 更新检查完成
 	void OnDownloadFinish() {
 
-		UpdateManager.GetInstance().UpdateVersion();
+		UpdateManager.Instance.UpdateVersion();
 
 		AssetBundleManager.InitDependenceInfo ();
 
-		ResourceManager.GetInstance().Init();
+		ResourceManager.Instance.Init();
 
 		LanguageManager.GetInstance().Init();
+
+		CfgManager.GetInstance ().Init ();
 
 		// 初始化lua engine
 		LuaFileUtils loader = new LuaResLoader();
 		loader.beZip = GameConfig.EnableUpdate;	// 是否读取assetbundle lua文件
-		Dictionary<string, string> localfiles = UpdateManager.GetInstance().LocalFiles;
+		Dictionary<string, string> localfiles = UpdateManager.Instance.LocalFiles;
 		foreach(string file in localfiles.Keys) {
 			if (file.Substring(0,3) == "lua") {
 				AssetBundle assetBundle = AssetBundleManager.GetAssetBundle(file);
@@ -95,7 +97,7 @@ public class PanelUpdate : MonoBehaviour {
 		}
 
 		// 
-		LuaManager luaManager = LuaManager.GetInstance(true);
+		LuaManager luaManager = LuaManager.Instance;
 		luaManager.InitStart();
 		luaManager.DoFile("Game");
 		Util.CallMethod("Game", "OnInitOK");

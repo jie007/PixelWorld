@@ -1,6 +1,6 @@
 ﻿/// <summary>
-/// DataManager
-/// 管理所有配置
+/// LanguageManager
+/// 多国语言管理
 /// </summary>
 using UnityEngine;
 using System;
@@ -10,14 +10,17 @@ using LitJson;
 
 
 public class LanguageManager {
+
 	private static LanguageManager _instance;
 	public static LanguageManager GetInstance() {
 		if (_instance == null) _instance = new LanguageManager();
 		return _instance;
 	}
-	private static bool s_init = false;
+	public void Clear() {
+		_instance = null;
+	}
 
-	// shop
+	// k-v
 	private Dictionary<string, string> values = new Dictionary<string, string>();
 
 	public string GetValue(string key) {
@@ -29,10 +32,11 @@ public class LanguageManager {
 	}
 
 	public void Init() {
-		if (s_init) return;
+
+		values.Clear ();
 
 		// block cfg
-		TextAsset asset = Resources.Load("Localization/zh-cn") as TextAsset;
+		TextAsset asset = ResourceManager.Instance.LoadAsset("Localization/zh-cn") as TextAsset;
 		string[] lines = asset.text.Split(new char[]{'\r','\n'}, StringSplitOptions.RemoveEmptyEntries);
 		for (int i = 1; i < lines.Length; i ++) {
 			lines[i].TrimStart();
@@ -47,7 +51,6 @@ public class LanguageManager {
 			}
 		}
 
-		s_init = true;
 	}
 
 

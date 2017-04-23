@@ -109,7 +109,7 @@ public class Character : MonoBehaviour {
 	protected IEnumerator HitBack(Vector3 forward) {
 		IsControllable = false;
 
-		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/HitBack");
+		Object prefab = ResourceManager.Instance.LoadAsset("Prefabs/HitBack");
 		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 		go.transform.localScale = Vector3.one;
 		go.transform.localPosition = transform.localPosition;
@@ -136,7 +136,7 @@ public class Character : MonoBehaviour {
 	protected IEnumerator HitFly(Vector3 forward) {
 		IsControllable = false;
 
-		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/HitFly");
+		Object prefab = ResourceManager.Instance.LoadAsset("Prefabs/HitFly");
 		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 		go.transform.localScale = Vector3.one;
 		go.transform.localPosition = transform.localPosition;

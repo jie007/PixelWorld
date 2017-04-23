@@ -223,7 +223,7 @@ using UnityEditor;
         public static void ClearMemory() {
             GC.Collect(); 
             Resources.UnloadUnusedAssets();
-            LuaManager mgr = LuaManager.GetInstance(false);
+            LuaManager mgr = LuaManager.Instance;
             if (mgr != null) mgr.LuaGC();
         }
 
@@ -256,7 +256,7 @@ using UnityEditor;
         /// 执行Lua方法
         /// </summary>
         public static object[] CallMethod(string module, string func, params object[] args) {
-            LuaManager luaMgr = LuaManager.GetInstance();
+            LuaManager luaMgr = LuaManager.Instance;
             if (luaMgr == null) return null;
             return luaMgr.CallFunction(module + "." + func, args);
         }

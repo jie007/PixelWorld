@@ -8,21 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 
 
-public class ResourceManager : MonoBehaviour {
-
-	private static ResourceManager instance;
-	public static ResourceManager GetInstance() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-	
-		if (instance == null) {
-			instance = main.AddComponent<ResourceManager>();
-		}
-		return instance;
-	}
+public class ResourceManager : Singleton<ResourceManager> {
 
 	public void Init() {
 		Debug.Log("ResourceManager:Init");
@@ -30,13 +16,13 @@ public class ResourceManager : MonoBehaviour {
 	}
 
 	private AssetBundle GetAssetBundle(string assetBundleName) {
-		if (UpdateManager.GetInstance().LocalFiles.ContainsKey(assetBundleName)) {
+		if (UpdateManager.Instance.LocalFiles.ContainsKey(assetBundleName)) {
 			return AssetBundleManager.GetAssetBundle(assetBundleName);
 		} else {
 			// parent
 			string parent = assetBundleName.Substring(0, assetBundleName.LastIndexOf('/'));
 
-			if (UpdateManager.GetInstance().LocalFiles.ContainsKey(parent)) {
+			if (UpdateManager.Instance.LocalFiles.ContainsKey(parent)) {
 				return AssetBundleManager.GetAssetBundle(parent);
 			}
 		}
@@ -80,13 +66,13 @@ public class ResourceManager : MonoBehaviour {
 	public void UnloadAsset(string assetName) {
 		string assetBundleName = assetName.ToLower();
 
-		if (UpdateManager.GetInstance().LocalFiles.ContainsKey(assetBundleName)) {
+		if (UpdateManager.Instance.LocalFiles.ContainsKey(assetBundleName)) {
 			AssetBundleManager.UnloadAssetBundle(assetBundleName);
 		} else {
 			// parent
 			string parent = assetBundleName.Substring(0, assetBundleName.LastIndexOf('/'));
 
-			if (UpdateManager.GetInstance().LocalFiles.ContainsKey(parent)) {
+			if (UpdateManager.Instance.LocalFiles.ContainsKey(parent)) {
 				AssetBundleManager.UnloadAssetBundle(parent);
 			}
 		}

@@ -6,12 +6,12 @@ json = require "cjson"
 inspect = require "core/inspect"
 
 -- manager
-guiMgr = GUIManager.GetInstance()
-resMgr = ResourceManager.GetInstance()
 lanMgr = LanguageManager.GetInstance()
 sceneMgr = SceneManager.GetInstance()
-networkMgr = NetworkManager.GetInstance()
-chMgr = CharacterManager.GetInstance()
+guiMgr = GUIManager.Instance
+resMgr = ResourceManager.Instance
+networkMgr = NetworkManager.Instance
+chMgr = CharacterManager.Instance
 
 require "config"
 require "network/network"

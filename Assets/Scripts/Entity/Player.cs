@@ -85,7 +85,7 @@ public class Player : Character {
 	// auto-rotate
 	public void AutoRotateToEnemy() {
 		float distance = 0;
-		Enemy enemy = CharacterManager.GetInstance().FindNearestEnemy(transform.position, out distance);
+		Enemy enemy = CharacterManager.Instance.FindNearestEnemy(transform.position, out distance);
 		if (distance < DisAttack*3) {
 			Vector3 offset = enemy.transform.position - transform.position;
 			offset.y = 0;
@@ -103,7 +103,7 @@ public class Player : Character {
 	protected void StartSkill1 ()
 	{
 		// missile
-		GameObject prefab = (GameObject)ResourceManager.GetInstance().LoadAsset("Prefabs/Effect/Skill/Fx_arrow");
+		GameObject prefab = (GameObject)ResourceManager.Instance.LoadAsset("Prefabs/Effect/Skill/Fx_arrow");
 		ObjectPool.CreatePool("efx_arrow", prefab, 1);
 		GameObject go = ObjectPool.Spawn("efx_arrow");
 		go.tag = gameObject.tag + "Missile";

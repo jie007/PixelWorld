@@ -20,6 +20,9 @@ public class SceneManager {
 		if (_instance == null) _instance = new SceneManager();
 		return _instance;
 	}
+	public void Clear() {
+		_instance = null;
+	}
 
 	private SceneID _CurrentSceneID;
 	public SceneID CurrentSceneID {get {return _CurrentSceneID;}}
@@ -47,7 +50,7 @@ public class SceneManager {
 		}
 
 		// 切换场景时，清楚gui缓存
-		GUIManager.GetInstance().Clear();
+		GUIManager.Instance.Clear();
 
 		_CurrentSceneID = id;
 	}

@@ -3,22 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-public class UpdateManager : MonoBehaviour {
-
-	private static UpdateManager instance;
-	public static UpdateManager GetInstance() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-	
-		if (instance == null) {
-			instance = main.AddComponent<UpdateManager>();
-		}
-		return instance;
-	}
-
+public class UpdateManager : Singleton<UpdateManager> {
 
 	List<string> m_UpdateFiles = new List<string>();
 	public string[] UpdateFiles {get {return m_UpdateFiles.ToArray();}}
@@ -44,7 +29,7 @@ public class UpdateManager : MonoBehaviour {
 	}
 
 	IEnumerator Download(HandleDownloadFinish handler) {
-		string url = AssetBundleManager.GetInstance().BaseDownloaindURL + "resourcelist.txt";
+		string url = AssetBundleManager.Instance.BaseDownloaindURL + "resourcelist.txt";
 
 		WWW www = new WWW(url);
 

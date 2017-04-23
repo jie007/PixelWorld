@@ -43,8 +43,12 @@ public class BattleManager : MonoBehaviour {
 	}
 
 	public Enemy SpawnEnemy(int id, Vector3 pos, Quaternion rot){
-		Enemy enemy = CharacterManager.GetInstance ().AddEnemy (id, pos, rot);
-		CallMethod("enemy_spawn", enemy);
-		return enemy;
+		if (CfgManager.GetInstance ().Monsters.ContainsKey (id)) {
+			string prefab = CfgManager.GetInstance ().Monsters [id].prefab;
+			Enemy enemy = CharacterManager.Instance.AddEnemy (prefab, pos, rot);
+			CallMethod("enemy_spawn", enemy);
+			return enemy;
+		}
+		return null;
 	}
 }

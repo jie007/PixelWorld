@@ -5,27 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
 
-public class LuaManager : MonoBehaviour {
+public class LuaManager : Singleton<LuaManager> {
 
-	private static LuaManager _instance;
-	public static LuaManager GetInstance(bool bCreate=false) {
-		if (bCreate == false) return _instance;
+    private LuaState lua;
+    private LuaLooper loop = null;
 
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-		if (_instance == null) {
-			_instance = main.AddComponent<LuaManager>();
-		}
-		return _instance;
-	}
-
-        private LuaState lua;
-        private LuaLooper loop = null;
-
-        // Use this for initialization
+    // Use this for initialization
 	void Awake() {
 
 		lua = new LuaState();

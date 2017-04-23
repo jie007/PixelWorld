@@ -2,27 +2,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class CharacterManager : MonoBehaviour {
-
-	private static CharacterManager instance;
-	public static CharacterManager GetInstance() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-	
-		if (instance == null) {
-			instance = main.AddComponent<CharacterManager>();
-		}
-		return instance;
-	}
-
+public class CharacterManager : Singleton<CharacterManager> {
 
 	private List<Character> m_Characters = new List<Character>();
 
 	public Player AddPlayer(Vector3 pos, Quaternion rot) {
-		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Character/king");
+		Object prefab = ResourceManager.Instance.LoadAsset("Prefabs/Character/king");
 		GameObject go = GameObject.Instantiate(prefab, pos, rot) as GameObject;
 		//go.transform.localScale = Vector3.one;
 		Player player = go.GetComponent<Player>();
@@ -34,17 +19,13 @@ public class CharacterManager : MonoBehaviour {
 		return AddPlayer (new Vector3 (x, y, z), Quaternion.identity);
 	}  
 
-	public Enemy AddEnemy(int id, Vector3 pos, Quaternion rot) {
-		Object prefab = ResourceManager.GetInstance().LoadAsset("Prefabs/Enemy/"+id);
-		GameObject go = GameObject.Instantiate(prefab, pos, rot) as GameObject;
+	public Enemy AddEnemy(string prefab, Vector3 pos, Quaternion rot) {
+		Object obj = ResourceManager.Instance.LoadAsset(prefab);
+		GameObject go = GameObject.Instantiate(obj, pos, rot) as GameObject;
 		//go.transform.localScale = Vector3.one;
 		Enemy enemy = go.GetComponent<Enemy>();
 		m_Characters.Add(enemy);
 		return enemy;
-	}  
-
-	public Enemy AddEnemy(int id, float x, float y, float z) {
-		return AddEnemy (id, new Vector3 (x, y, z), Quaternion.identity);
 	}
 
 	public bool CheckEnemyInArea( Vector3 pos, float range) {

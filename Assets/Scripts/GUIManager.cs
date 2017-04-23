@@ -4,21 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class GUIManager : MonoBehaviour {
-
-	private static GUIManager _instance;
-	public static GUIManager GetInstance() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-	
-		if (_instance == null) {
-			_instance = main.AddComponent<GUIManager>();
-		}
-		return _instance;
-	}
+public class GUIManager : Singleton<GUIManager> {
 
 	enum LayerPriority {
 		Normal=0,
@@ -66,7 +52,7 @@ public class GUIManager : MonoBehaviour {
 			view = m_Stack[index];
 			m_Stack.RemoveAt(index);
 		} else {
-			Object obj = ResourceManager.GetInstance().LoadAsset("UI/"+window);
+			Object obj = ResourceManager.Instance.LoadAsset("UI/"+window);
 			GameObject panel = Instantiate(obj as GameObject);
 			panel.name = window;
 			LuaBehaviour lua = panel.GetComponent<LuaBehaviour>();

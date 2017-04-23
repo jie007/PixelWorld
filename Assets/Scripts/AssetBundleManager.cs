@@ -9,7 +9,7 @@ using System.IO;
 public delegate void HandleDownloadFinish(WWW www);
 public delegate void HandleDownloadCallback();
 
-public class AssetBundleManager : MonoBehaviour {
+public class AssetBundleManager : Singleton<AssetBundleManager> {
 
 	private class LoadedAssetBundle {
 		public AssetBundle assetBundle;
@@ -23,28 +23,17 @@ public class AssetBundleManager : MonoBehaviour {
 		}
 	}
 
-	private static AssetBundleManager instance;
-	public static AssetBundleManager GetInstance() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-	
-		if (instance == null) {
-			instance = main.AddComponent<AssetBundleManager>();
-
-			// download path for platforms
-			s_BaseDownloadingURL +=
+	AssetBundleManager() {
+		// download path for platforms
+		s_BaseDownloadingURL +=
 #if UNITY_EDITOR
-			GetPlatformFolderForAssetBundles(EditorUserBuildSettings.activeBuildTarget);
+		GetPlatformFolderForAssetBundles(EditorUserBuildSettings.activeBuildTarget);
 #else
-			GetPlatformFolderForAssetBundles(Application.platform);
+		GetPlatformFolderForAssetBundles(Application.platform);
 #endif
-			s_BaseDownloadingURL += "/";
-			Debug.Log("AssetBundleManager baseURL " + s_BaseDownloadingURL);
-		}
-		return instance;
+		s_BaseDownloadingURL += "/";
+		Debug.Log("AssetBundleManager baseURL " + s_BaseDownloadingURL);
+
 	}
 
 

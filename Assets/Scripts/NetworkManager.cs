@@ -4,20 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using LuaInterface;
 
-public class NetworkManager : MonoBehaviour {
-	private static NetworkManager instance;
-	public static NetworkManager GetInstance() {
-		GameObject main = GameObject.Find("Main");
-		if (main == null) {
-			main = new GameObject("Main");
-			DontDestroyOnLoad(main);
-		}
-	
-		if (instance == null) {
-			instance = main.AddComponent<NetworkManager>();
-		}
-		return instance;
-	}
+public class NetworkManager : Singleton<NetworkManager> {
 
         private SocketClient socket;
         static readonly object m_lockObject = new object();
@@ -63,30 +50,27 @@ public class NetworkManager : MonoBehaviour {
                 mEvents.Enqueue(new KeyValuePair<int, ByteBuffer>(_event, data));
             }
         }
-
-        /// <summary>
-        /// 交给Command，这里不想关心发给谁。
-        /// </summary>
+		
         void Update() {
-		if (mEvents.Count > 0) {
-			while (mEvents.Count > 0) {
-				KeyValuePair<int, ByteBuffer> _event = mEvents.Dequeue();
-				if (_event.Key >= 100) {
-					CallMethod("OnMessage", _event.Key, _event.Value);
-				} else {
-					// 连接消息
-					if (_event.Key == Protocol.Refused) {
-						CallMethod("OnDisconnect");
-					} else if (_event.Key == Protocol.Connect) {
-						CallMethod("OnConnect");
-					} else if (_event.Key == Protocol.Exception) {
-						CallMethod("OnException");
-					}else if (_event.Key == Protocol.Disconnect) {
-						CallMethod("OnDisconnect");
+			if (mEvents.Count > 0) {
+				while (mEvents.Count > 0) {
+					KeyValuePair<int, ByteBuffer> _event = mEvents.Dequeue();
+					if (_event.Key >= 100) {
+						CallMethod("OnMessage", _event.Key, _event.Value);
+					} else {
+						// 连接消息
+						if (_event.Key == Protocol.Refused) {
+							CallMethod("OnDisconnect");
+						} else if (_event.Key == Protocol.Connect) {
+							CallMethod("OnConnect");
+						} else if (_event.Key == Protocol.Exception) {
+							CallMethod("OnException");
+						}else if (_event.Key == Protocol.Disconnect) {
+							CallMethod("OnDisconnect");
+						}
 					}
 				}
 			}
-		}
         }
 
         /// <summary>
