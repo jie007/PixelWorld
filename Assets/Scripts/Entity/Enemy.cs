@@ -6,14 +6,12 @@ public class Enemy : Character {
 
 	public Vector3 BornPosition {get;set;}
 
-	CharacterController characterController;
 	BehaviorTree tree;
 	NavMeshAgent agent;
 
 	protected override void Awake() {
 		base.Awake();
 
-		characterController = GetComponent<CharacterController>();
 		tree = GetComponent<BehaviorTree>();
 		agent = GetComponent<NavMeshAgent>();
 		//agent.enabled = false;
@@ -50,15 +48,11 @@ public class Enemy : Character {
 			BattleManager.GetInstance ().EnemyHit (ID, player.ID);
 			if (HP > 0) {
 				ActHit();
+				AttackEffect("Prefabs/Effect/Hit/Fx_hit", 1, new Vector3(0, 0.5f, 0));
 				StartCoroutine(HitBack (offset.normalized));
 			} else {
 				StartCoroutine(HitFly (offset.normalized));
 			}
-		} else if (tag == "PlayerMissile") {
-			Missile missile = collider.transform.GetComponent<Missile>();
-			Debug.Log("missile " + missile.ID);
-			ActHit();
-			BattleManager.GetInstance ().EnemyHit (ID, missile.ID);
 		}
 	}
 	void OnTriggerExit(Collider collider)  {  

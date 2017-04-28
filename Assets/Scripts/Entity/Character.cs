@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum CharaterState {
 	IDLE=0,
@@ -24,32 +25,83 @@ public class Character : MonoBehaviour {
 
 	// attrs
 	public int HP = 100;				// hp
+	public int HPMax = 100;			// hp max
 	public int MP = 100;				// mp
+	public int MPMax = 100;			// mp max
 	
-	public float Speed = 4.0f;			// 移动速度
-	public float DisSight = 10.0f;		// 可视范围
-	public float DisAttack = 1.0f; 		// 攻击范围
+	public float Speed = 3.0f;			// 移动速度
+	public float DistSight = 5.0f;		// 可视范围
+	public float DistAttack = 1.0f; 		// 攻击范围
+
+	public static string[] PropertyName = new string[] {
+		"HP",
+		"HPMax",
+		"SP",
+		"SPMax",
+		"Atk",
+		"Def",
+		"Hit",			// 命中
+		"Dodge",			// 闪避
+		"Crit",			// 暴击
+
+		"MoveSpeed",		// 移动速度		
+		"AttackSpeed"		// 攻击速度
+	};
+	public Hashtable Property = null;
+
+	// test
+	public int SkillID = 0;
 
 	public bool IsControllable {get; set;}		// is contollable?
+
+	public int LastSummonID {get; set;}		// last summon hit id
 
 	public bool IsAlive() { return HP > 0; }
 
 	//动画组件
 	protected Animator m_Animator;
+	public Animator Animator {get{return m_Animator;}}
 
 	protected CharaterState m_CharacterState;
 	public CharaterState CharcterState {get{return m_CharacterState;}}
 
+	//
+	protected CharacterController m_CharacterController;
 
 	protected GameObject AttackBox;
 
+	// prop
+	public void AddHP(int value) {
+		HP += value;
+		HP = HP > HPMax ? HPMax : HP;
+		BattleManager.GetInstance().ActorAddHP(this, value);
+	}
+	public void AddSP(int value) {
+		MP += value;
+		MP = MP > MPMax ? MPMax : MP;
+		BattleManager.GetInstance().ActorAddSP(this, value);
+	}
+
+	// skills
+	public Dictionary<int, Skill> dicSkills = new Dictionary<int, Skill>();
+
+	// buffs
+	public List<Buff> buffs = new List<Buff>();
+
 	protected virtual void Awake() {
+		m_CharacterController = GetComponent<CharacterController>();
 		m_Animator = GetComponentInChildren<Animator>();
 
 		AttackBox = transform.Find("AttackBox").gameObject;
 		AttackBox.SetActive(false);
 
 		IsControllable = true;
+
+		// test skill
+		Skill skill = Skill.CreateSkill(SkillID);
+		if (skill != null) {
+			dicSkills.Add(SkillID, skill);
+		}
 	}
 
 	protected virtual void Start() {
@@ -57,7 +109,22 @@ public class Character : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		bool bChanged = false;
+		for (int i = buffs.Count-1; i >= 0; i --) {
+			if (buffs[i].IsDead()) {
+				buffs.RemoveAt(i);
+				bChanged = true;
+			} else {
+				buffs[i].Update();
+			}
+		}
+		if (bChanged) {
+			RefreshProperty();
+		}
+	}
 
+	public float GetRadius() {
+		return m_CharacterController.radius;
 	}
 
 	public virtual void ActIdle() {
@@ -105,6 +172,64 @@ public class Character : MonoBehaviour {
 		}
 	}
 
+	public Skill GetSkill(int skillid) {
+		if (dicSkills.ContainsKey(skillid)) {
+			return dicSkills[skillid];
+		} else {
+			Debug.LogWarningFormat("skill {0} not exist", skillid);
+			return null;
+		}
+	}
+
+	public void CastSkill(int skillid) {
+		Debug.LogFormat("CastSkill {0}", skillid);
+		if (dicSkills.ContainsKey(skillid)) {
+			Skill skill = dicSkills[skillid];
+			SkillStateManager.Instance.AddSkillState(this, skill);
+		} else {
+			Debug.LogWarningFormat("skill {0} not exist", skillid);
+		}
+	}
+
+	public void AddSummon(int uid, Vector3 pos, Quaternion rot, SkillSummonInfo info) {
+		if (CfgManager.GetInstance().SkillSummons.ContainsKey(info.id)) {
+			CfgSkillSummon cfg = CfgManager.GetInstance().SkillSummons[info.id];
+			GameObject prefab = (GameObject)ResourceManager.Instance.LoadAsset(cfg.prefab);
+			GameObject go = Instantiate(prefab) as GameObject;
+			go.tag = gameObject.tag + "Missile";
+			go.transform.localScale = Vector3.one;
+			go.transform.rotation = rot;
+			if (cfg.speed > 0) {//移动
+				go.transform.position = pos + new Vector3(0, 0.5f, 0) + transform.forward * 0.5f;
+			} else {
+				go.transform.position = pos ;
+			}
+			SkillSummon summon = go.AddComponent<SkillSummon>();
+			summon.SetInfo(uid, this, info);
+		}
+	}
+
+	public void AttackEffect(string path,  float life, Vector3 pos) {
+		GameObject prefab = (GameObject)ResourceManager.Instance.LoadAsset(path);
+		GameObject go = Instantiate(prefab) as GameObject;
+		go.transform.SetParent(transform);
+		go.transform.localScale = Vector3.one;
+		go.transform.localPosition = pos;
+		Destroy(go, life);
+	}
+
+	public void AddBuff(int id) {
+		// check buff states
+		// TO-DO
+
+		Buff buff = Buff.CreateBuff(id);
+		buff.SetOwner(this);
+		buff.Start();
+	}
+
+	private void RefreshProperty() {
+		
+	}
 
 	protected IEnumerator HitBack(Vector3 forward) {
 		IsControllable = false;
@@ -154,6 +279,8 @@ public class Character : MonoBehaviour {
 		}
 
 		Destroy (go);
+
+		if (HP <= 0) m_CharacterController.enabled = false;
 
 		IsControllable = true;
 	}

@@ -41,9 +41,9 @@ function battle.init(obj)
 	lockview:SetTarget(this.player_tf)
 
 	-- object cache
-	ObjectPool.CreatePool("Hit", resMgr:LoadAsset('Prefabs/Effect/Hit/Fx_hit'), 1)
 	ObjectPool.CreatePool('HealthBar', resMgr:LoadAsset('UI/Widget/HealthBar'), 1)
 	ObjectPool.CreatePool("CritNum", resMgr:LoadAsset('UI/Widget/CritNum'), 1)
+	ObjectPool.CreatePool("HpAddNum", resMgr:LoadAsset('UI/Widget/HpAddNum'), 1)
 	ObjectPool.CreatePool("Coin", resMgr:LoadAsset('Prefabs/Item/coin'), 5)
 
 	-- enemy
@@ -55,8 +55,6 @@ end
 function battle.init_player()
 
 	this.player = chMgr:AddPlayer(7, 6, 21)
-	this.player.ID = this.UID
-	this.UID = this.UID + 1
 
 	this.player_tf = this.player.transform
 end
@@ -68,6 +66,22 @@ end
 
 function battle.camera_shake()
 	local shake = this.camera:DOShakePosition(0.3, 0.2, 20, 90)
+end
+
+function battle.add_hp(actor, value)
+	print("add_hp", id, value)
+	local pos = actor.transform.position + Vector3.New(0, 0, 0)
+	effect_mgr.create_hp_label(pos, value)
+
+    facade:sendNotification(BATTLE_HP_CHANGE, {hp=actor.HP})
+end
+
+function battle.add_sp(actor, value)
+	print("add_sp", id, value)
+	local pos = actor.transform.position + Vector3.New(0, 0, 0)
+	effect_mgr.create_hp_label(pos, value)
+
+    facade:sendNotification(BATTLE_SP_CHANGE, {hp=actor.MP})
 end
 
 function battle.player_hit(id, attackid)
@@ -96,7 +110,6 @@ function battle.player_hit(id, attackid)
 	-- effect
 	local pos = this.player_tf.position + Vector3.New(0, 1, 0)
 	effect_mgr.create_hit_label(pos, -attack)
-	effect_mgr.create_hit(this.player_tf)
 	
 	this.camera_shake()
 end
@@ -113,7 +126,6 @@ function battle.enemy_hit(id, attackid)
 		local pos = enemy[3].position + Vector3.New(0, 1, 0)
 		effect_mgr.create_hit_label(pos, -attack)
 
-		effect_mgr.create_hit(enemy[3])
 	end
 
 end
@@ -210,11 +222,9 @@ function battle.destroy()
 	-- body
 	chMgr:RemoveAll()
 
-	resMgr:UnloadAsset('Prefabs/Effect/Hit')
 	resMgr:UnloadAsset('UI/Widget/HealthBar')
 	resMgr:UnloadAsset('UI/Widget/CritNum')
+	resMgr:UnloadAsset('UI/Widget/HpAddNum')
 	resMgr:UnloadAsset('Prefabs/Item/coin')
-	resMgr:UnloadAsset('Prefabs/Environment/treasure')
-	resMgr:UnloadAsset('Prefabs/Environment/box')
 
 end

@@ -8,24 +8,11 @@ public class Player : Character {
 
 	private int m_AttackIdx = 1;
 
-
-	protected GameObject SkillBox;
-
 	// Use this for initialization
 	protected override void Awake () {
 		base.Awake();
 
 		m_Controller=GetComponent<CharacterController>();
-
-		SkillBox = transform.Find("SkillBox").gameObject;
-		SkillBox.SetActive(false);
-	}
-
-
-	public virtual void ActJump() {
-		Debug.Log("ActJump");
-		m_CharacterState = CharaterState.JUMP;
-		m_Animator.CrossFade("jump", 0);
 	}
 
 	public virtual void ActAttack1() {
@@ -71,22 +58,11 @@ public class Player : Character {
 		}
 	}
 
-
-	public void OnEventSkill1(string param) {
-		//Debug.LogFormat("OnEventAttack {0} {1}", ID, param);
-		if (param == "start") {
-			//SkillBox.SetActive(true);
-			StartSkill1();
-		} else {
-			//SkillBox.SetActive(false);
-		}
-	}
-
 	// auto-rotate
 	public void AutoRotateToEnemy() {
 		float distance = 0;
 		Enemy enemy = CharacterManager.Instance.FindNearestEnemy(transform.position, out distance);
-		if (distance < DisAttack*3) {
+		if (distance < DistAttack*3) {
 			Vector3 offset = enemy.transform.position - transform.position;
 			offset.y = 0;
 			transform.forward = offset.normalized;
@@ -120,15 +96,11 @@ public class Player : Character {
 			Enemy enemy = collider.transform.parent.GetComponent<Enemy>();
 			Debug.Log("Enemy " + enemy.ID);
 			ActHit();
+			AttackEffect("Prefabs/Effect/Hit/Fx_hit", 1, new Vector3(0, 0.5f, 0));
 			Vector3 offset = transform.position - enemy.transform.position;
 			offset.y = 0;
 			StartCoroutine(HitBack (offset.normalized));
 			BattleManager.GetInstance ().PlayerHit (ID, enemy.ID);
-		} else if (tag == "EnemyMissile") {
-			Missile missile = collider.GetComponent<Missile>();
-			Debug.Log("missile " + missile.ID);
-			ActHit();
-			BattleManager.GetInstance ().PlayerHit (ID, missile.ID);
 		} else if (tag == "NPC") {
 			NPC npc = collider.GetComponent<NPC>();
 			BattleManager.GetInstance ().PlayerEnterNpc (ID, npc.ID);

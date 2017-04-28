@@ -172,44 +172,13 @@ public class PlayerController : MonoBehaviour {
 				if (hasAdjustRotation == false) {
 					m_Player.AutoRotateToEnemy();
 					hasAdjustRotation = true;
+					m_Player.CastSkill(m_Player.SkillID);
 				}
 				move.x = 0;
 				move.z = 0;
 				m_Animator.SetBool("bSkill1", false);
 			}
 		}
-
-		/*
-		if (m_Controller.isGrounded) {
-
-			if (m_Player.CharcterState == CharaterState.IDLE || m_Player.CharcterState == CharaterState.RUN) {
-				move = mDir * RunSpeed;
-			} else {
-				// no move 
-				isMoving = false;
-			}
-			if (bAttack) {
-				move.x = 0;
-				move.z = 0;
-				m_Player.ActAttack1();
-			} else if (bJump) {
-				move.y = 4;		// 向上初速度
-				m_Player.ActJump();
-			} else if (isMoving) {
-				transform.forward = mDir;
-				if (m_Player.CharcterState != CharaterState.RUN) {
-					m_Player.ActRun();
-				}
-			} else {
-				move.x = 0;
-				move.z = 0;
-				// 移动停止 or 跳跃着地
-				if (m_Player.CharcterState == CharaterState.RUN || m_Player.CharcterState == CharaterState.JUMP) m_Player.ActIdle();
-			}
-		} else {
-			// in air
-		}
-		*/
 
 		if (!m_Controller.isGrounded) {
 			// 重力下降

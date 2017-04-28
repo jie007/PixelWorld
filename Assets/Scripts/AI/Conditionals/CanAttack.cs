@@ -19,7 +19,7 @@ namespace AI {
 
 		public override TaskStatus OnUpdate ()
 		{			
-			if (distance.Value < _owner.DisAttack) {
+			if (distance.Value < _owner.DistAttack) {
 				// 判断聚集
 				return TaskStatus.Success;
            		} else {

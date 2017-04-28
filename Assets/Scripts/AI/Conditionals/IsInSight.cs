@@ -45,7 +45,7 @@ namespace AI {
 	       		Vector3 offset = go.transform.position - transform.position;
 	       		distance.Value = offset.magnitude;
 
-			if (distance.Value <= _owner.DisSight) {
+			if (distance.Value <= _owner.DistSight) {
 				target.Value = go.transform.position;
 
 				// calculate dir

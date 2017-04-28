@@ -13,7 +13,6 @@ local this = enemy_mgr
 
 function enemy_mgr.init()
 
-	this.UID = 0
 	this.enemys = {}
 
 	-- update
@@ -21,10 +20,6 @@ function enemy_mgr.init()
 end
 
 function enemy_mgr.spawn(enemy)
-
-	local id = this.UID
-	enemy.ID = id
-	this.UID = this.UID + 1
 
 	local transform = enemy.transform
 
@@ -36,7 +31,7 @@ function enemy_mgr.spawn(enemy)
 	local slider = bar.transform:Find('Slider'):GetComponent('Slider') 
 	slider.value = 1
 
-	this.enemys[id] = {enemy, enemy.gameObject, transform, bar, slider}
+	this.enemys[enemy.ID] = {enemy, enemy.gameObject, transform, bar, slider}
 end
 
 function enemy_mgr.Update()

@@ -51,4 +51,11 @@ public class BattleManager : MonoBehaviour {
 		}
 		return null;
 	}
+
+	public void ActorAddHP(Character actor, int value){
+		CallMethod("add_hp", actor, value);
+	}
+	public void ActorAddSP(Character actor, int value){
+		CallMethod("add_sp", actor, value);
+	}
 }

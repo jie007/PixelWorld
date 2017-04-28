@@ -1,5 +1,6 @@
 {
-"100":{"name": "Ñ£ÔÎ¼ı,ÃüÖĞ»Ö¸´sp", "effect":"Prefabs/Effect/Skill/Fx_arrow.prefab", "skilleffect":[107£¬111]},
-"101":{"name": "ÂÒ¼ı¿ñÉä,ÃüÖĞ»Ö¸´sp", "effect":"Prefabs/Effect/Skill/Fx_arrow.prefab", "skilleffect":[107]},
-"102":{"name": "»ğÇò,ÃüÖĞ»Ö¸´sp", "effect":"Prefabs/Effect/Skill/Fx_arrow.prefab", "skilleffect":[107]},
+"100":{"name": "çœ©æ™•ç®­,å‘½ä¸­æ¢å¤sp", "prefab":"Prefabs/Effect/Skill/Fx_ice_arrow", "speed":5, "life":3000, "hitmax":1, "skilleffect":[110,300], "hiteffect":"Prefabs/Effect/Hit/Fx_hit_ice"},
+"101":{"name": "ä¹±ç®­ç‹‚å°„,å‘½ä¸­æ¢å¤sp", "prefab":"Prefabs/Effect/Skill/Fx_arrow", "speed":6, "life":600, "hitmax":1, "skilleffect":[111], "hiteffect":"Prefabs/Effect/Hit/Fx_hit"},
+"102":{"name": "ç«çƒ,å‘½ä¸­æ¢å¤sp", "prefab":"Prefabs/Effect/Skill/Fx_fire_arrow", "speed":5, "life":1000, "hitmax":0, "skilleffect":[112,301], "hiteffect":"Prefabs/Effect/Hit/Fx_hit_fire"},
+"103":{"name": "é™·é˜±ï¼Œé€ æˆæ•Œæ–¹50%ä¼¤å®³ï¼Œå¹¶å‡é€Ÿ20%", "prefab":"Prefabs/Effect/Skill/Fx_dark_servant_skill01_buf", "speed":0, "life":5000, "hitmax":0, "skilleffect":[110, 302], "hiteffect":"Prefabs/Effect/Hit/Fx_hit_poison"}
 }

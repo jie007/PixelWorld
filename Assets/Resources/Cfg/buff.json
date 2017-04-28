@@ -1,8 +1,8 @@
 {
-"100":{"name": "»ØÑª¹â»·£¬»Ö¸´100µãÑªÁ¿£¬³ÖĞø5s", "type":1, "time":5, "count":1, "damage":100, "effect":"Prefabs/Effect/Buff/Fx_buff_addhp.prefab"},
-"101":{"name": "»¤¶Ü¹â»·£¬¼õÉÙ50%ÉËº¦£¬³ÖĞø5s", "type":1, "time":5, "count":1, "damage":50, "effect":"Prefabs/Effect/Buff/Fx_hudun_001.prefab"},
-"102":{"name": "»èÃÔ£¬³ÖĞø5s", "type":1,  "time":5, "count":1, "damage":0, "effect":"Prefabs/Effect/Buff/Fx_Hunmi_001.prefab"},
-"103":{"name": "È¼ÉÕ£¬Ôì³É50µãÉËº¦£¬³ÖĞø5s", "type":1,  "time":5, "count":1, "damage":0, "effect":"Prefabs/Effect/Buff/Fx_Ranshao_001.prefab"},
-"104":{"name": "¼õËÙ5%£¬³ÖĞø5s", "type":1,  "time":5, "count":1, "damage":5, "effect":"Prefabs/Effect/Buff/Fx_poisonbuf.prefab"},
-"105":{"name": "¼õËÙ10%£¬³ÖĞø5s", "type":1,  "time":5, "count":1, "damage":5, "effect":"Prefabs/Effect/Buff/Fx_poisonbuf.prefab"},
+"100":{"name": "å›è¡€å…‰ç¯ï¼Œæ¢å¤100ç‚¹è¡€é‡ï¼ŒæŒç»­5s", "type":1, "life":5000, "hitcount":1, "damage":100, "prefab":"Prefabs/Effect/Buff/Fx_buff_addhp"},
+"101":{"name": "æŠ¤ç›¾å…‰ç¯ï¼Œå‡å°‘50%ä¼¤å®³ï¼ŒæŒç»­5s", "type":1, "life":5000, "hitcount":1, "damage":50, "prefab":"Prefabs/Effect/Buff/Fx_hudun_001"},
+"102":{"name": "æ˜è¿·ï¼ŒæŒç»­5s", "type":1,  "life":5000, "hitcount":1, "damage":0, "prefab":"Prefabs/Effect/Buff/Fx_Hunmi_001"},
+"103":{"name": "ç‡ƒçƒ§ï¼Œé€ æˆ50ç‚¹ä¼¤å®³ï¼ŒæŒç»­5s", "type":1,  "life":5000, "hitcount":1, "damage":0, "prefab":"Prefabs/Effect/Buff/Fx_Ranshao_001"},
+"104":{"name": "å‡é€Ÿ5%ï¼ŒæŒç»­5s", "type":1,  "life":5000, "hitcount":1, "damage":5, "prefab":"Prefabs/Effect/Buff/Fx_poisonbuf"},
+"105":{"name": "å‡é€Ÿ10%ï¼ŒæŒç»­5s", "type":1,  "life":5000, "hitcount":1, "damage":5, "prefab":"Prefabs/Effect/Buff/Fx_poisonbuf"}
 }
