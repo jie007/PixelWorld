@@ -15,6 +15,7 @@ public class Skill
 	private string hiteffect;
 	private int[] hitpoints;
 	private int spcost;
+	private float colddown;
 	private SkillTarget targettype;
 	private int aoe;
 
@@ -25,6 +26,10 @@ public class Skill
 	public int[] HitPoints {get {return hitpoints;}}
 	public int Aoe {get {return aoe;}}
 	public SkillTarget TargetType {get {return targettype;}}
+	public int SPCost {get {return spcost;}}
+	public float ColdDown {get {return colddown;}}
+
+	public bool IsColdDown {get; set;}
 
 	public static Skill CreateSkill(int id) {
 		if (CfgManager.GetInstance().Skills.ContainsKey(id)) {
@@ -50,6 +55,8 @@ public class Skill
 		hitpoints = cfg.hitpoints;
 		targettype = cfg.targettype;
 		aoe = cfg.aoe;
+		spcost = cfg.spcost;
+		colddown = cfg.colddown;
 
 		// skill effects
 		int count = cfg.skilleffects.Length;

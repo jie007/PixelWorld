@@ -80,6 +80,9 @@ function Game.OnInitOK()
     local data = resMgr:LoadAsset('Cfg/equip'):ToString()
     CFG.equips = json.decode(data)
 
+    local data = resMgr:LoadAsset('Cfg/skill'):ToString()
+    CFG.skills = json.decode(data)
+
     facade:sendNotification(OPEN_WINDOW, {name="PanelLogin"})
 end
 

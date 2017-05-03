@@ -71,21 +71,28 @@ public class SkillEffect
 	void DoHP(Character actor) {
 		Debug.Log("DoHP");
 		int[] args = cfg.args;
+		int value = 0;
 		if (args[0] == 0) {	// 固定值
-			actor.AddHP(args[1]);
+			value = args[1];
 		} else {// 百分比
-			actor.AddHP(args[1]*actor.HPMax);
+			value = args[1]*actor.HPMax;
 		}
+
+		actor.AddHP(value);
+		BattleManager.GetInstance().ActorAddHP(actor, value);
 	}
 
 	void DoSP(Character actor) {
 		Debug.Log("DoSP");
 		int[] args = cfg.args;
+		int value = 0;
 		if (args[0] == 0) {	// 固定值
-			actor.AddSP(args[1]);
+			value = args[1];
 		} else {// 百分比
-			actor.AddSP(args[1]*actor.MPMax);
+			value = args[1]*actor.MPMax;
 		}
+		actor.AddMP(value);
+		BattleManager.GetInstance().ActorAddSP(actor, value);
 	}
 
 	void DoAddBuff(Character owner) {

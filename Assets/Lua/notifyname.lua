@@ -10,6 +10,7 @@ COIN_CHANGE = "coin_change"
 -- battle
 BATTLE_HP_CHANGE = "battle_hp_change"
 BATTLE_MP_CHANGE = "battle_mp_change"
+BATTLE_CAST_SKILL = "battle_cast_skill"
 
 
 -- 注册登录

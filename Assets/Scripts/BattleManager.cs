@@ -52,10 +52,22 @@ public class BattleManager : MonoBehaviour {
 		return null;
 	}
 
+	public void HPChange(int value, int max){
+		CallMethod("hp_change", value, max);
+	}
+	public void MPChange(int value, int max){
+		CallMethod("sp_change", value, max);
+	}
 	public void ActorAddHP(Character actor, int value){
 		CallMethod("add_hp", actor, value);
 	}
 	public void ActorAddSP(Character actor, int value){
 		CallMethod("add_sp", actor, value);
+	}
+	public void ShowTip(string str){
+		CallMethod("show_tip", str);
+	}
+	public void CastSkill(int id){
+		CallMethod("cast_skill", id);
 	}
 }

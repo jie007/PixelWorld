@@ -45,18 +45,17 @@ public class Character : MonoBehaviour {
 		"Crit",			// 暴击
 
 		"MoveSpeed",		// 移动速度		
-		"AttackSpeed"		// 攻击速度
+		"AttackSpeed",		// 攻击速度
 	};
 	public Hashtable Property = null;
-
-	// test
-	public int SkillID = 0;
 
 	public bool IsControllable {get; set;}		// is contollable?
 
 	public int LastSummonID {get; set;}		// last summon hit id
 
 	public bool IsAlive() { return HP > 0; }
+
+	public bool IsUser { get; set;}			// 是否是玩家自己
 
 	//动画组件
 	protected Animator m_Animator;
@@ -74,19 +73,25 @@ public class Character : MonoBehaviour {
 	public void AddHP(int value) {
 		HP += value;
 		HP = HP > HPMax ? HPMax : HP;
-		BattleManager.GetInstance().ActorAddHP(this, value);
+
+		if (IsUser) BattleManager.GetInstance().HPChange(HP, HPMax);
 	}
-	public void AddSP(int value) {
+	public void AddMP(int value) {
 		MP += value;
 		MP = MP > MPMax ? MPMax : MP;
-		BattleManager.GetInstance().ActorAddSP(this, value);
+
+		if (IsUser) BattleManager.GetInstance().MPChange(MP, MPMax);
 	}
 
 	// skills
+	public List<int> lstSkills = new List<int>();
 	public Dictionary<int, Skill> dicSkills = new Dictionary<int, Skill>();
 
 	// buffs
 	public List<Buff> buffs = new List<Buff>();
+	private float HPRecoverTimer = 0;
+	private float MPRecoverTimer = 0;
+
 
 	protected virtual void Awake() {
 		m_CharacterController = GetComponent<CharacterController>();
@@ -96,12 +101,6 @@ public class Character : MonoBehaviour {
 		AttackBox.SetActive(false);
 
 		IsControllable = true;
-
-		// test skill
-		Skill skill = Skill.CreateSkill(SkillID);
-		if (skill != null) {
-			dicSkills.Add(SkillID, skill);
-		}
 	}
 
 	protected virtual void Start() {
@@ -120,6 +119,21 @@ public class Character : MonoBehaviour {
 		}
 		if (bChanged) {
 			RefreshProperty();
+		}
+
+		if (HP < HPMax) {
+			HPRecoverTimer += Time.deltaTime;
+			if (HPRecoverTimer > 1.0f) {
+				AddHP(1);
+				HPRecoverTimer = 0f;
+			}
+		}
+		if (MP < MPMax) {
+			MPRecoverTimer += Time.deltaTime;
+			if (MPRecoverTimer > 1.0f) {
+				AddMP(1);
+				MPRecoverTimer = 0f;
+			}
 		}
 	}
 
@@ -172,6 +186,20 @@ public class Character : MonoBehaviour {
 		}
 	}
 
+	public Skill AddSkill(int skillid) {
+		if (dicSkills.ContainsKey(skillid)) {
+			return dicSkills[skillid];
+		} else {
+			Skill skill = Skill.CreateSkill(skillid);
+			if (skill != null) {
+				dicSkills.Add(skillid, skill);
+				lstSkills.Add(skillid);
+			} else {
+				Debug.LogWarningFormat("skill {0} not exist", skillid);
+			}
+			return null;
+		}
+	}
 	public Skill GetSkill(int skillid) {
 		if (dicSkills.ContainsKey(skillid)) {
 			return dicSkills[skillid];
@@ -180,15 +208,30 @@ public class Character : MonoBehaviour {
 			return null;
 		}
 	}
+	public Skill GetSkillByIdx(int idx) {
+		if (idx < 0 || idx >= lstSkills.Count) {
+			return null;
+		} else {
+			int id = lstSkills[idx];
+			return dicSkills[id];
+		}
+	}
 
-	public void CastSkill(int skillid) {
-		Debug.LogFormat("CastSkill {0}", skillid);
+	public Skill CastSkill(int idx) {
+		Debug.LogFormat("CastSkill {0}", idx);
+
+		if (idx < 0 || idx >= lstSkills.Count) {
+			return null;
+		}
+		int skillid = lstSkills[idx];
 		if (dicSkills.ContainsKey(skillid)) {
 			Skill skill = dicSkills[skillid];
 			SkillStateManager.Instance.AddSkillState(this, skill);
+			return skill;
 		} else {
 			Debug.LogWarningFormat("skill {0} not exist", skillid);
 		}
+		return null;
 	}
 
 	public void AddSummon(int uid, Vector3 pos, Quaternion rot, SkillSummonInfo info) {

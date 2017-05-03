@@ -25,6 +25,8 @@ ITEM_COMPOSE_SUCCESS				= 合成成功！
 
 # battle
 BATTLE_EXIT							= 确认退出战斗？
+BATTLE_SKILL_COLDDOWN				= 技能冷却中
+BATTLE_MP_NOT_ENOUGH				= 魔法值不足！
 
 # shop
 SHOP_BUY_SUCCESS					= 购买成功！

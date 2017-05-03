@@ -27,6 +27,8 @@ public struct CfgSkill {
 	public int[] skilleffects;
 	public int[] hitpoints;
 	public string hiteffect;
+	public int spcost;				// 魔法消耗
+	public float colddown;			// 冷却时间
 	public SkillTarget targettype;		// 施法对象
 	public byte aoe;			// aoe范围
 	public byte aoetype;			// aoe形状 0:圆形 1:扇形
@@ -147,6 +149,8 @@ public class CfgManager {
 			cfg.effect =  (string)value["effect"];
 			cfg.sound =  (string)value["sound"];
 			cfg.hiteffect =  (string)value["hiteffect"];
+			cfg.spcost = (int)value["spcost"];
+			cfg.colddown = (int)value["colddown"]/1000f;
 			cfg.targettype =  (SkillTarget)(int)value["targettype"];
 			cfg.aoe = (byte)value["aoe"];
 			JsonData effects = value["skilleffect"];

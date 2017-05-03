@@ -27,16 +27,18 @@ end
 --	mvc notication
 -----------------------------------------------------------------------
 function PanelBattle:listNotificationInterests()
-	return {BATTLE_HP_CHANGE, BATTLE_MP_CHANGE, COIN_CHANGE,}
+	return {BATTLE_HP_CHANGE, BATTLE_MP_CHANGE, COIN_CHANGE, BATTLE_CAST_SKILL}
 end
 function PanelBattle:handleNotification(notification)
 	if gameObject == nil then return end
 
 	local name = notification._name
-	if name == BATTLE_HP_CHANGE or name == BATTLE_HP_CHANGE then
+	if name == BATTLE_HP_CHANGE or name == BATTLE_MP_CHANGE then
 		this.RefreshAttrs(notification._body)
 	elseif name == COIN_CHANGE then
 		this.UpadeCoin(notification._body)
+	elseif name == BATTLE_CAST_SKILL then
+		this.CastSkill(notification._body)
 	end
 
 end
@@ -58,6 +60,13 @@ function PanelBattle.InitPanel()
 	this.bar_mp = transform:Find('bar mp'):GetComponent('Image')
 	this.bar_hp.fillAmount = 1
 	this.bar_mp.fillAmount = 1
+
+	local panel = transform:Find('TouchController')
+	this.skill_icons = {
+		 panel:Find("ButtonSkill1"):GetComponent('ColdDownBehaviour'),
+		 panel:Find("ButtonSkill2"):GetComponent('ColdDownBehaviour'),
+		 panel:Find("ButtonSkill3"):GetComponent('ColdDownBehaviour'),
+		}
 
 
 	local btn_exit = transform:Find("Button Exit").gameObject
@@ -94,10 +103,22 @@ function PanelBattle.UpadeCoin(data)
 end
 
 function PanelBattle.RefreshAttrs(data)
-	print(TAG, "RefreshAttrs")
+	--print(TAG, "RefreshAttrs")
 	if data.hp then
-		this.bar_hp.fillAmount = data.hp / 100
+		this.bar_hp.fillAmount = data.hp / (data.hpmax or 100)
 	end 
+	if data.mp then
+		this.bar_mp.fillAmount = data.mp / (data.mpmax or 100)
+	end 
+end
+
+function PanelBattle.CastSkill(data) 
+	print(TAG, "CastSkill "..data.id)
+
+	local cfg = CFG.skills[tostring(data.id)]
+	print (cfg)
+
+	--this.skill_icons[tonumber(data.idx)].
 end
 
 return PanelBattle

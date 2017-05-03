@@ -55,6 +55,10 @@ end
 function battle.init_player()
 
 	this.player = chMgr:AddPlayer(7, 6, 21)
+	this.skills = {100, 101, 102}
+	for i = 1, #this.skills do
+		this.player:AddSkill(this.skills[i])
+	end
 
 	this.player_tf = this.player.transform
 end
@@ -73,7 +77,7 @@ function battle.add_hp(actor, value)
 	local pos = actor.transform.position + Vector3.New(0, 0, 0)
 	effect_mgr.create_hp_label(pos, value)
 
-    facade:sendNotification(BATTLE_HP_CHANGE, {hp=actor.HP})
+    facade:sendNotification(BATTLE_HP_CHANGE, {hp=actor.HP, hpmax=actor.HPMax})
 end
 
 function battle.add_sp(actor, value)
@@ -81,7 +85,22 @@ function battle.add_sp(actor, value)
 	local pos = actor.transform.position + Vector3.New(0, 0, 0)
 	effect_mgr.create_hp_label(pos, value)
 
-    facade:sendNotification(BATTLE_SP_CHANGE, {hp=actor.MP})
+    facade:sendNotification(BATTLE_MP_CHANGE, {mp=actor.MP, mpmax=actor.MPMax})
+end
+
+function battle.hp_change(value, max)
+    facade:sendNotification(BATTLE_HP_CHANGE, {hp=value, hpmax=max})
+end
+function battle.sp_change(value, max)
+    facade:sendNotification(BATTLE_MP_CHANGE, {mp=value, mpmax=max})
+end
+
+function battle.show_tip(str)
+	facade:sendNotification(TIP, {data={lanMgr:GetValue(str)}})
+end
+
+function battle.cast_skill(id)
+	facade:sendNotification(BATTLE_CAST_SKILL, {idx=id, id=this.skills[id+1]})
 end
 
 function battle.player_hit(id, attackid)

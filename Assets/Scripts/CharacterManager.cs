@@ -7,6 +7,7 @@ public class CharacterManager : Singleton<CharacterManager> {
 	private List<Character> m_Characters = new List<Character>();
 
 	static int UID = 0;
+	public Player Self = null;
 
 	public Player AddPlayer(Vector3 pos, Quaternion rot) {
 		Object prefab = ResourceManager.Instance.LoadAsset("Prefabs/Character/king");
@@ -15,6 +16,7 @@ public class CharacterManager : Singleton<CharacterManager> {
 		Player player = go.GetComponent<Player>();
 		player.ID = UID++;
 		m_Characters.Add(player);
+		player.IsUser = true;
 		return player;
 	}
 

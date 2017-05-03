@@ -53,10 +53,10 @@ public class PlayerController : MonoBehaviour {
 		float vertical = CrossPlatformInputManager.GetAxis("Vertical");
 
 
-		bool bJump = CrossPlatformInputManager.GetButtonDown ("Jump");
-		bool bAttack = CrossPlatformInputManager.GetButtonDown ("Fire1");
-		bool bSkill1 = CrossPlatformInputManager.GetButtonDown ("Fire2");
-		bool bSkill2 = CrossPlatformInputManager.GetButtonDown ("Fire3");
+		bool bJump = CrossPlatformInputManager.GetButtonUp ("Jump");
+		bool bAttack = CrossPlatformInputManager.GetButtonUp ("Fire1");
+		bool bSkill1 = CrossPlatformInputManager.GetButtonUp ("Fire2");
+		bool bSkill2 = CrossPlatformInputManager.GetButtonUp ("Fire3");
 		if (bJump) {
 			Debug.LogFormat("bJump {0}", bJump);
 		}
@@ -81,12 +81,27 @@ public class PlayerController : MonoBehaviour {
 			isMoving = false;
 		}
 
-
 		if (m_Controller.isGrounded == false) {
 			bJump = false;
 			bAttack = false;
 			bSkill1 = false;
 			bSkill2 = false;
+		}
+
+		if (bSkill1) {
+			Skill skill = m_Player.GetSkillByIdx(0);
+			if (skill != null ) {
+				if (skill.IsColdDown) {
+					bSkill1 = false;
+					BattleManager.GetInstance().ShowTip("BATTLE_SKILL_COLDDOWN");
+				} else  if( !skill.CheckSP(m_Player)) {
+					bSkill1 = false;
+					BattleManager.GetInstance().ShowTip("BATTLE_MP_NOT_ENOUGH");
+				}
+			} else {
+				bSkill1 = false;
+				Debug.LogWarning("skill not found");
+			}
 		}
 
 		if (bJump) {
@@ -172,11 +187,22 @@ public class PlayerController : MonoBehaviour {
 				if (hasAdjustRotation == false) {
 					m_Player.AutoRotateToEnemy();
 					hasAdjustRotation = true;
-					m_Player.CastSkill(m_Player.SkillID);
+					StartCoroutine(CastSkill(0));
+					BattleManager.GetInstance().CastSkill(0);
 				}
 				move.x = 0;
 				move.z = 0;
 				m_Animator.SetBool("bSkill1", false);
+			} else if (cur.IsName("skill2")) {
+				if (hasAdjustRotation == false) {
+					m_Player.AutoRotateToEnemy();
+					hasAdjustRotation = true;
+					StartCoroutine(CastSkill(1));
+					BattleManager.GetInstance().CastSkill(1);
+				}
+				move.x = 0;
+				move.z = 0;
+				m_Animator.SetBool("bSkill2", false);
 			}
 		}
 
@@ -187,5 +213,15 @@ public class PlayerController : MonoBehaviour {
 
 		CollisionFlags flags = m_Controller.Move(move * Time.deltaTime);
 	}
- 
+
+
+	IEnumerator CastSkill(int idx) {
+		Skill skill = m_Player.CastSkill(idx);
+		if (skill != null) {
+			m_Player.AddMP(-skill.SPCost);
+			skill.IsColdDown = true;
+			yield return new WaitForSeconds(skill.ColdDown);
+			skill.IsColdDown = false;
+		}
+	}
 }
