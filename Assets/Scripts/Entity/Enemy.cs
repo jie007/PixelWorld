@@ -23,11 +23,6 @@ public class Enemy : Character {
 		BornPosition = transform.position;
 		//agent.enabled = true;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	public override void ActDie() {
 		base.ActDie();

@@ -55,7 +55,7 @@ end
 function battle.init_player()
 
 	this.player = chMgr:AddPlayer(7, 6, 21)
-	this.skills = {100, 101, 102}
+	this.skills = {100, 104, 102}
 	for i = 1, #this.skills do
 		this.player:AddSkill(this.skills[i])
 	end
@@ -99,8 +99,9 @@ function battle.show_tip(str)
 	facade:sendNotification(TIP, {data={lanMgr:GetValue(str)}})
 end
 
-function battle.cast_skill(id)
-	facade:sendNotification(BATTLE_CAST_SKILL, {idx=id, id=this.skills[id+1]})
+function battle.cast_skill(idx)
+	local idx = idx + 1
+	facade:sendNotification(BATTLE_CAST_SKILL, {idx=idx, id=this.skills[idx]})
 end
 
 function battle.player_hit(id, attackid)

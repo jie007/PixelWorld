@@ -44,7 +44,7 @@ function PanelTip:show_tip(...)
 	go.transform.localPosition = Vector3.zero
 	local text = go:GetComponent("Text")
 	text.font = fontArial
-	text.fontSize = 30
+	text.fontSize = 26
 	text.alignment = UnityEngine.TextAnchor.MiddleCenter
 	text.text = msg
 	text.raycastTarget = false
@@ -53,7 +53,7 @@ function PanelTip:show_tip(...)
 
 	-- move
 	local sequence = DOTween.Sequence()
-	move = rt:DOMoveY(400, 2, false)
+	move = rt:DOLocalMoveY(100, 2, false)
 	sequence:Append(move)
 	sequence:AppendCallback(DG.Tweening.TweenCallback(function ()
 		-- remove

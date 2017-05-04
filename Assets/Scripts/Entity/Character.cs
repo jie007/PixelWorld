@@ -33,6 +33,12 @@ public class Character : MonoBehaviour {
 	public float DistSight = 5.0f;		// 可视范围
 	public float DistAttack = 1.0f; 		// 攻击范围
 
+	public bool IsControllable {get; set;}		// is contollable?
+
+	public bool IsAlive() { return HP > 0; }
+
+	public bool IsUser { get; set;}			// 是否是玩家自己
+
 	public static string[] PropertyName = new string[] {
 		"HP",
 		"HPMax",
@@ -46,16 +52,26 @@ public class Character : MonoBehaviour {
 
 		"MoveSpeed",		// 移动速度		
 		"AttackSpeed",		// 攻击速度
+
+
+		// for buff
+		"DamageReduce",	// 伤害减免
 	};
-	public Hashtable Property = null;
+	public Hashtable Property 				= null;
+	public Hashtable PropertyBuf 				= null;
 
-	public bool IsControllable {get; set;}		// is contollable?
-
+	// skills
+	public List<int> lstSkills 					= new List<int>();
+	public Dictionary<int, Skill> dicSkills 			= new Dictionary<int, Skill>();
 	public int LastSummonID {get; set;}		// last summon hit id
 
-	public bool IsAlive() { return HP > 0; }
+	// buffs
+	public List<Buff> buffs 					= new List<Buff>();
+	private float HPRecoverTimer 				= 0;
+	private float MPRecoverTimer 				= 0;
+	public bool IsStun {get; set;}
+	public bool IsFrozen {get; set;}
 
-	public bool IsUser { get; set;}			// 是否是玩家自己
 
 	//动画组件
 	protected Animator m_Animator;
@@ -82,16 +98,6 @@ public class Character : MonoBehaviour {
 
 		if (IsUser) BattleManager.GetInstance().MPChange(MP, MPMax);
 	}
-
-	// skills
-	public List<int> lstSkills = new List<int>();
-	public Dictionary<int, Skill> dicSkills = new Dictionary<int, Skill>();
-
-	// buffs
-	public List<Buff> buffs = new List<Buff>();
-	private float HPRecoverTimer = 0;
-	private float MPRecoverTimer = 0;
-
 
 	protected virtual void Awake() {
 		m_CharacterController = GetComponent<CharacterController>();
@@ -252,13 +258,14 @@ public class Character : MonoBehaviour {
 		}
 	}
 
-	public void AttackEffect(string path,  float life, Vector3 pos) {
+	public GameObject AttackEffect(string path,  float life, Vector3 pos) {
 		GameObject prefab = (GameObject)ResourceManager.Instance.LoadAsset(path);
 		GameObject go = Instantiate(prefab) as GameObject;
 		go.transform.SetParent(transform);
 		go.transform.localScale = Vector3.one;
 		go.transform.localPosition = pos;
 		Destroy(go, life);
+		return go;
 	}
 
 	public void AddBuff(int id) {
@@ -268,6 +275,8 @@ public class Character : MonoBehaviour {
 		Buff buff = Buff.CreateBuff(id);
 		buff.SetOwner(this);
 		buff.Start();
+
+		buffs.Add(buff);
 	}
 
 	private void RefreshProperty() {

@@ -113,12 +113,13 @@ function PanelBattle.RefreshAttrs(data)
 end
 
 function PanelBattle.CastSkill(data) 
-	print(TAG, "CastSkill "..data.id)
+	print(TAG, "CastSkill", data.idx, data.id)
 
 	local cfg = CFG.skills[tostring(data.id)]
-	print (cfg)
+	print (cfg.colddown)
+	print (inspect(this.skill_icons))
 
-	--this.skill_icons[tonumber(data.idx)].
+	this.skill_icons[tonumber(data.idx)]:SetColdDown(cfg.colddown/1000)
 end
 
 return PanelBattle

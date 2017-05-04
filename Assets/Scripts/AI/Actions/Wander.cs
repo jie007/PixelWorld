@@ -32,10 +32,6 @@ namespace AISystem
 		
 		public override TaskStatus OnUpdate ()
 		{
-			if(_owner.HP <= 0) {
-				return TaskStatus.Failure;
-			}
-
 			Vector3 offset = target.Value - transform.position;
 	           	offset.y = 0;
 

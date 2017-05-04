@@ -11,11 +11,13 @@ public class Buff
 
 	CfgBuff cfg;
 
-	private float timer;
+	private float timer					= 0f;
+	private bool bPeriod 				= false; 
+	private float periodTimer				= 0f;
+
+	private bool isDead 					= false;
 
 	private Character owner;
-	private GameObject effect;
-	private bool isDead = false;
 
 	public void SetOwner(Character actor) {
 		owner = actor;
@@ -39,13 +41,41 @@ public class Buff
 
 		cfg = CfgManager.GetInstance().Buffs[id];
 		this.id = cfg.id;
-		
+
+		if (cfg.operation == BuffOperation.OPERATION_HP || 
+			cfg.operation == BuffOperation.OPERATION_SP || 
+			cfg.operation == BuffOperation.OPERATION_DAMAGE) {
+			bPeriod = true;
+			periodTimer = cfg.life / cfg.args[0];
+		}
 	}
 
 
 	public void Start() {
+		Debug.Log("Buff:Start");
 		if (cfg.prefab != null && cfg.prefab.Length > 0) {
 			owner.AttackEffect(cfg.prefab, cfg.life, Vector3.zero);
+		}
+
+		switch(cfg.operation) {
+		case BuffOperation.OPERATION_HP:
+			break;
+		case BuffOperation.OPERATION_SP:
+			break;
+		case BuffOperation.OPERATION_DAMAGE:
+			break;
+		case BuffOperation.OPERATION_ADD:
+			break;
+		case BuffOperation.OPERATION_REDUCE:
+			break;
+		case BuffOperation.OPERATION_STUN:
+			owner.IsStun = true;
+			break;
+		case BuffOperation.OPERATION_FROZEN:
+			owner.IsFrozen = true;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -56,6 +86,10 @@ public class Buff
 			End();
 		}
 
+		// 持续buff
+		if (bPeriod) {
+			
+		}
 	}
 
 
@@ -68,10 +102,28 @@ public class Buff
 	}
 
 	void End() {
-		Debug.Log("End");
+		Debug.Log("Buff:End");
 		isDead = true;
-		if (effect != null) {
-			GameObject.Destroy(effect);
+
+		switch(cfg.operation) {
+		case BuffOperation.OPERATION_HP:
+			break;
+		case BuffOperation.OPERATION_SP:
+			break;
+		case BuffOperation.OPERATION_DAMAGE:
+			break;
+		case BuffOperation.OPERATION_ADD:
+			break;
+		case BuffOperation.OPERATION_REDUCE:
+			break;
+		case BuffOperation.OPERATION_STUN:
+			owner.IsStun = false;
+			break;
+		case BuffOperation.OPERATION_FROZEN:
+			owner.IsFrozen = false;
+			break;
+		default:
+			break;
 		}
 	}
 }

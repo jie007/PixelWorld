@@ -25,10 +25,6 @@ namespace AI {
 
 		public override TaskStatus OnUpdate ()
 		{
-			if (_owner.HP <= 0) {
-				return TaskStatus.Failure;
-			}
-
 	       		GameObject go = GameObject.FindWithTag(tag.Value);
 	       		if (go == null) {
 	       			return TaskStatus.Failure;

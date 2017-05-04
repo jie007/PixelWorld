@@ -55,8 +55,10 @@ public class PlayerController : MonoBehaviour {
 
 		bool bJump = CrossPlatformInputManager.GetButtonUp ("Jump");
 		bool bAttack = CrossPlatformInputManager.GetButtonUp ("Fire1");
-		bool bSkill1 = CrossPlatformInputManager.GetButtonUp ("Fire2");
-		bool bSkill2 = CrossPlatformInputManager.GetButtonUp ("Fire3");
+		bool [] bSkills = new bool[3];
+		bSkills[0] = CrossPlatformInputManager.GetButtonUp ("Fire2");
+		bSkills[1] = CrossPlatformInputManager.GetButtonUp ("Fire3");
+		bSkills[2] = CrossPlatformInputManager.GetButtonUp ("Fire4");
 		if (bJump) {
 			Debug.LogFormat("bJump {0}", bJump);
 		}
@@ -84,22 +86,22 @@ public class PlayerController : MonoBehaviour {
 		if (m_Controller.isGrounded == false) {
 			bJump = false;
 			bAttack = false;
-			bSkill1 = false;
-			bSkill2 = false;
+			for (int i = 0; i < bSkills.Length; i ++) bSkills[i] = false;
 		}
 
-		if (bSkill1) {
-			Skill skill = m_Player.GetSkillByIdx(0);
+		for (int i = 0; i < bSkills.Length; i ++) {
+			if (bSkills[i] == false) continue;
+			Skill skill = m_Player.GetSkillByIdx(i);
 			if (skill != null ) {
 				if (skill.IsColdDown) {
-					bSkill1 = false;
+					bSkills[i] = false;
 					BattleManager.GetInstance().ShowTip("BATTLE_SKILL_COLDDOWN");
 				} else  if( !skill.CheckSP(m_Player)) {
-					bSkill1 = false;
+					bSkills[i] = false;
 					BattleManager.GetInstance().ShowTip("BATTLE_MP_NOT_ENOUGH");
 				}
 			} else {
-				bSkill1 = false;
+				bSkills[i] = false;
 				Debug.LogWarning("skill not found");
 			}
 		}
@@ -130,7 +132,9 @@ public class PlayerController : MonoBehaviour {
 					m_AttackIdx = 1;
 				}
 				m_Animator.SetInteger("AttackIdx", m_AttackIdx);
-				m_Animator.SetBool("bSkill1", bSkill1);
+				for (int i = 0; i < bSkills.Length; i ++) {
+					m_Animator.SetBool("bSkill"+(i+1), bSkills[i]);
+				}
 				m_Animator.SetBool("bHit", false);
 				//Debug.Log("run");
 			} else if (cur.IsName("idle")) {
@@ -143,7 +147,9 @@ public class PlayerController : MonoBehaviour {
 					m_AttackIdx = 1;
 				}
 				m_Animator.SetInteger("AttackIdx", m_AttackIdx);
-				m_Animator.SetBool("bSkill1", bSkill1);
+				for (int i = 0; i < bSkills.Length; i ++) {
+					m_Animator.SetBool("bSkill"+(i+1), bSkills[i]);
+				}
 				//Debug.Log("idle");
 			} else if (cur.IsName("jump")) {
 				if (yMove > 0 && cur.normalizedTime < 0.5f) {	// ¿ªÊ¼jump
@@ -203,6 +209,16 @@ public class PlayerController : MonoBehaviour {
 				move.x = 0;
 				move.z = 0;
 				m_Animator.SetBool("bSkill2", false);
+			} else if (cur.IsName("skill3")) {
+				if (hasAdjustRotation == false) {
+					m_Player.AutoRotateToEnemy();
+					hasAdjustRotation = true;
+					StartCoroutine(CastSkill(2));
+					BattleManager.GetInstance().CastSkill(2);
+				}
+				move.x = 0;
+				move.z = 0;
+				m_Animator.SetBool("bSkill3", false);
 			}
 		}
 

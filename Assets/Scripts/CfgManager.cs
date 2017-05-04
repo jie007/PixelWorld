@@ -85,9 +85,20 @@ public struct CfgBuff {
 	public string name;
 	public string prefab;
 	public float life;
-	public int hitcount;
-	public int damage;
+	public BuffOperation operation;
+	public int[] args;
+}
+public enum BuffOperation {
+	OPERATION_NONE=0,		
+	OPERATION_HP,					// add/reduce hp self
+	OPERATION_SP,					// add/reduce sp self
+	OPERATION_DAMAGE,				// 持续伤害
 
+	OPERATION_ADD,					// add property [speed, attack... ]
+	OPERATION_REDUCE,				// reduce property
+
+	OPERATION_STUN,					//  stun target
+	OPERATION_FROZEN,				// frozen target
 }
 
 public class CfgManager {
@@ -216,8 +227,12 @@ public class CfgManager {
 			cfg.name = (string)value["name"];
 			cfg.prefab =  (string)value["prefab"];
 			cfg.life = (int)value["life"]/1000f;
-			cfg.hitcount = (int)value["hitcount"];
-			cfg.damage = (int)value["damage"];
+			cfg.operation =  (BuffOperation)(int)value["operation"];
+			JsonData args = value["args"];
+			cfg.args = new int[args.Count];
+			for (int i = 0; i < args.Count; i ++) {
+				cfg.args[i] = (int)args[i];
+			}
 			m_Buffs.Add(cfg.id, cfg);
 		}
 	}

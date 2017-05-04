@@ -102,7 +102,7 @@ public class SkillSummon : MonoBehaviour
 	}
 
 	void End() {
-		Debug.Log("End");
+		Debug.Log("SkillSummon:End");
 		Destroy(gameObject);
 	}
 

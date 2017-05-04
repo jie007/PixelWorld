@@ -177,6 +177,7 @@ public static class CustomSettings
 		_GT(typeof(LockViewCameraController)),
 		_GT(typeof(BreakableObject)),
 		_GT(typeof(DropItem)),
+		_GT(typeof(ColdDownBehaviour)),
     };
 
     public static List<Type> dynamicList = new List<Type>()
