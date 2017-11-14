@@ -29,7 +29,7 @@ end
 
 --初始化面板--
 function PanelLogin.InitPanel()
-	local btn_login = transform:FindChild("Button Login").gameObject
+	local btn_login = transform:Find("Button Login").gameObject
 
 	window = transform:GetComponent('LuaBehaviour')
 

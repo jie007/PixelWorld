@@ -39,12 +39,12 @@ end
 --初始化面板--
 function PanelAlert.InitPanel()
 	print(TAG, 'InitPanel')
-	this.btn_ok = transform:FindChild("Button OK").gameObject
-	this.btn_cancel = transform:FindChild("Button Cancel").gameObject
+	this.btn_ok = transform:Find("Button OK").gameObject
+	this.btn_cancel = transform:Find("Button Cancel").gameObject
 	print(this.btn_ok, this.btn_cancel)
 
-	local text_title = transform:FindChild("Text Title"):GetComponent('Text')
-	local text_msg = transform:FindChild("Text Msg"):GetComponent("Text")
+	local text_title = transform:Find("Text Title"):GetComponent('Text')
+	local text_msg = transform:Find("Text Msg"):GetComponent("Text")
 	text_title.text = this.title
 	text_msg.text = this.msg
 

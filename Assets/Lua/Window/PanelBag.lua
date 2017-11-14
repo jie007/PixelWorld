@@ -32,7 +32,7 @@ end
 
 --初始化面板--
 function PanelBag.InitPanel()
-	local btn_close = transform:FindChild("Button Close").gameObject
+	local btn_close = transform:Find("Button Close").gameObject
 	local content = transform:Find('Scroll View/Viewport/Content')
 
 	window = transform:GetComponent('LuaBehaviour')

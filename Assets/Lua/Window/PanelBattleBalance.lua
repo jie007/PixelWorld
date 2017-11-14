@@ -30,7 +30,7 @@ end
 
 --初始化面板--
 function PanelBattleBalance.InitPanel()
-	local btn_close = transform:FindChild("Button OK").gameObject
+	local btn_close = transform:Find("Button OK").gameObject
 
 	window = transform:GetComponent('LuaBehaviour')
 
